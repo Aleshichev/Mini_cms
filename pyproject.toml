@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "12-cms-project"
+version = "0.1.0"
+description = ""
+authors = ["Igor <Aleshichev.git@email.ua>"]
+readme = "README.md"
+packages = [{include = "12"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.13"
+pydantic = "^2.11.7"
+sqlalchemy = "^2.0.41"
+pydantic-settings = "^2.10.0"
+
+
+[tool.poetry.group.dev.dependencies]
+uvicorn = {extras = ["standard"], version = "^0.34.3"}
+pytest = "^8.4.1"
+black = "^25.1.0"
+pylint = "^3.3.7"
+isort = "^6.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
