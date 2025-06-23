@@ -36,3 +36,5 @@ class User(Base):
     deals: Mapped[list["Deal"]] = relationship(
         back_populates="manager", cascade="all, delete-orphan"
     )
+    tasks: Mapped[list["Task"]] = relationship(back_populates="manager")
+

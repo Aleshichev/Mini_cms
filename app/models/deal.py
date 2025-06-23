@@ -22,3 +22,4 @@ class Deal(Base):
     
     manager: Mapped["User"] = relationship(back_populates="deals")
     client: Mapped["Client"] = relationship(back_populates="deals")
+    tasks: Mapped[list["Task"]] = relationship(back_populates="deal")
