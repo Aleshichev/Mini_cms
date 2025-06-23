@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from sqlalchemy import String, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base
 
 
@@ -15,3 +15,10 @@ class Client(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=datetime.utcnow
     )
+    
+    deals: Mapped[list["Deal"]] = relationship(
+        back_populates="client",
+        cascade="all, delete-orphan"
+    )
+
+    

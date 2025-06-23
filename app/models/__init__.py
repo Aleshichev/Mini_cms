@@ -1,4 +1,4 @@
-from .user import User  # ← обязательно!
+from .user import User 
 from .base import Base
 from .client import Client
 from .comment import Comment

@@ -1,0 +1,24 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from app.models.client import Client
+from app.schemas.client import ClientCreate
+import uuid
+
+
+async def get_client_by_email(session: AsyncSession, email: str) -> Client | None:
+    stmt = select(Client).where(Client.email == email)
+    result = await session.execute(stmt)
+    return result.scalars().first()
+
+
+async def create_client(session: AsyncSession, client_in: ClientCreate) -> Client:
+    client = Client(
+        id=uuid.uuid4(),
+        full_name=client_in.full_name,
+        email=client_in.email,
+        phone=client_in.phone,
+    )
+    session.add(client)
+    await session.commit()
+    await session.refresh(client)
+    return client
