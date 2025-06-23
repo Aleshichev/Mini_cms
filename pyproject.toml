@@ -10,8 +10,10 @@ packages = [{include = "12"}]
 python = "^3.10"
 fastapi = "^0.115.13"
 pydantic = "^2.11.7"
-sqlalchemy = "^2.0.41"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.41"}
 pydantic-settings = "^2.10.0"
+asyncpg = "^0.30.0"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 
 
 [tool.poetry.group.dev.dependencies]
@@ -20,6 +22,7 @@ pytest = "^8.4.1"
 black = "^25.1.0"
 pylint = "^3.3.7"
 isort = "^6.0.1"
+alembic = "^1.16.2"
 
 [build-system]
 requires = ["poetry-core"]

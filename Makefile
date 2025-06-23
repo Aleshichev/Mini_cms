@@ -13,7 +13,11 @@ format: isort black
 
 # Запустить docker-compose
 build:	
-	docker-compose up --build
+	docker-compose up --build -d
 
 down:
 	docker-compose down
+
+pycache_del:
+	find . -type d -name "__pycache__" -exec rm -r {} +
+	find . -type f -name "*.pyc" -delete
