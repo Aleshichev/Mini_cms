@@ -1,20 +1,32 @@
 import uuid
 from datetime import datetime
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from app.models.user import UserRole
 
 
 class UserBase(BaseModel):
-    full_name: str
+    full_name: str = Field(..., min_length=1, max_length=255)
     email: EmailStr
     role: UserRole = UserRole.manager
     is_active: bool = True
     telegram_id: int | None = None
     
+    
+
 
 class UserCreate(UserBase):
-    hashed_password: str
-    
+    hashed_password: str = Field(..., min_length=6, max_length=100)
+
+    @field_validator("hashed_password")
+    def validate_password(cls, v):
+        if len(v) < 6:
+            raise ValueError("Пароль слишком короткий")
+        if not any(char.isdigit() for char in v):
+            raise ValueError("Пароль должен содержать хотя бы одну цифру")
+        if not any(char.isupper() for char in v):
+            raise ValueError("Пароль должен содержать заглавную букву")
+        return v
+
 
 class UserRead(UserBase):
     id: uuid.UUID

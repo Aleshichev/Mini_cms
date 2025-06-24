@@ -19,7 +19,7 @@ class User(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
-    full_name: Mapped[str] = mapped_column(String, nullable=False)
+    full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str] = mapped_column(String, nullable=False, unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     role: Mapped[UserRole] = mapped_column(
@@ -37,4 +37,10 @@ class User(Base):
         back_populates="manager", cascade="all, delete-orphan"
     )
     tasks: Mapped[list["Task"]] = relationship(back_populates="manager")
+    
+    comments: Mapped[list["Comment"]] = relationship(
+    back_populates="author",
+    cascade="all, delete-orphan"
+)
+
 

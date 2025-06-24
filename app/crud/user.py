@@ -29,3 +29,9 @@ async def create_user(session: AsyncSession, user_in: UserCreate) -> User:
     await session.commit()
     await session.refresh(user)
     return user
+
+async def get_user_by_telegram_id(session: AsyncSession, telegram_id: int) -> User | None:
+    stmt = select(User).where(User.telegram_id == telegram_id)
+    result = await session.execute(stmt)
+    return result.scalars().first()
+

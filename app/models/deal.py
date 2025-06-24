@@ -9,8 +9,8 @@ class Deal(Base):
     __tablename__ = "deals"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    title: Mapped[str] = mapped_column(String, nullable=False)
-    description: Mapped[str | None] = mapped_column(Text)
+    title: Mapped[str] = mapped_column(String(1000), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text(3000))
     status: Mapped[str] = mapped_column(default="new")
 
     manager_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))

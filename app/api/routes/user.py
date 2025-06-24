@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.crud.user import get_user_by_email, create_user
+from app.crud.user import get_user_by_email, create_user, get_user_by_telegram_id
 from app.schemas.user import UserCreate, UserRead
 from app.core.database import get_db
 
@@ -15,5 +15,14 @@ async def create_new_user(user_in: UserCreate, session: AsyncSession = Depends(g
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="The user with this email already exists in the system",
         )
+        
+    if user_in.telegram_id is not None:
+        existing = await get_user_by_telegram_id(session, user_in.telegram_id)
+        if existing:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Пользователь с таким Telegram ID уже существует",
+            )
+
     return await create_user(session, user_in)
 
