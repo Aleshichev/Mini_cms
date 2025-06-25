@@ -21,7 +21,7 @@ async def create_new_user(user_in: UserCreate, session: AsyncSession = Depends(g
         if existing:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Пользователь с таким Telegram ID уже существует",
+                detail="The user with this telegram id already exists in the system",
             )
 
     return await create_user(session, user_in)

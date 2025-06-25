@@ -12,14 +12,15 @@ class Deal(Base):
     title: Mapped[str] = mapped_column(String(1000), nullable=False)
     description: Mapped[str | None] = mapped_column(Text(3000))
     status: Mapped[str] = mapped_column(default="new")
-
     manager_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
     client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"))
+    project_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("projects.id"))
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=datetime.utcnow
     )
-    
+
     manager: Mapped["User"] = relationship(back_populates="deals")
     client: Mapped["Client"] = relationship(back_populates="deals")
     tasks: Mapped[list["Task"]] = relationship(back_populates="deal")
+    project: Mapped["Project | None"] = relationship(back_populates="deals")

@@ -14,7 +14,7 @@ class ClientBase(BaseModel):
         if v is None:
             return v
         if not re.fullmatch(r"\+\d{11}", v):
-            raise ValueError("Телефон должен начинаться с + и содержать 11 цифр")
+            raise ValueError("The phone must start + and contain 11 digits")
         return v
     
 

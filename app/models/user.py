@@ -8,6 +8,7 @@ from sqlalchemy import String, Boolean, DateTime, BigInteger, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+
 class UserRole(enum.Enum):
     admin = "admin"
     manager = "manager"
@@ -37,10 +38,13 @@ class User(Base):
         back_populates="manager", cascade="all, delete-orphan"
     )
     tasks: Mapped[list["Task"]] = relationship(back_populates="manager")
-    
+
     comments: Mapped[list["Comment"]] = relationship(
-    back_populates="author",
-    cascade="all, delete-orphan"
-)
+        back_populates="author", cascade="all, delete-orphan"
+    )
 
+    profile: Mapped["Profile"] = relationship(back_populates="user", uselist=False)
 
+    projects: Mapped[list["Project"]] = relationship(
+        secondary="users_projects", back_populates="users"
+    )

@@ -8,18 +8,18 @@ from app.schemas.user import UserBase
 class DealBase(BaseModel):
     title: str
     description: str | None = None
-    status: str = "new"  
+    status: str = "new" 
+    client_id: uuid.UUID
+    manager_id: uuid.UUID 
+    project_id: uuid.UUID
 
 
 class DealCreate(DealBase):
-    client_id: uuid.UUID
-    manager_id: uuid.UUID
+    pass
 
 
 class DealRead(DealBase):
     id: uuid.UUID
-    client_id: uuid.UUID
-    manager_id: uuid.UUID
     created_at: datetime
 
     class Config:

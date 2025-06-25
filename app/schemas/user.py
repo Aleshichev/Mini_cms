@@ -20,11 +20,11 @@ class UserCreate(UserBase):
     @field_validator("hashed_password")
     def validate_password(cls, v):
         if len(v) < 6:
-            raise ValueError("Пароль слишком короткий")
+            raise ValueError("The password is too short")
         if not any(char.isdigit() for char in v):
-            raise ValueError("Пароль должен содержать хотя бы одну цифру")
+            raise ValueError("The pasword must contain at least one number")
         if not any(char.isupper() for char in v):
-            raise ValueError("Пароль должен содержать заглавную букву")
+            raise ValueError("The password must contain at least one uppercase letter")
         return v
 
 
