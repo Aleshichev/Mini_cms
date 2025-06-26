@@ -10,8 +10,6 @@ class UserBase(BaseModel):
     role: UserRole = UserRole.manager
     is_active: bool = True
     telegram_id: int | None = None
-    
-    
 
 
 class UserCreate(UserBase):
@@ -31,3 +29,6 @@ class UserCreate(UserBase):
 class UserRead(UserBase):
     id: uuid.UUID
     created_at: datetime
+
+    class Config:
+        orm_mode = True

@@ -8,15 +8,16 @@ class ClientBase(BaseModel):
     full_name: str
     phone: str | None = None
     email: EmailStr | None = None
-    
+    telegram_id: int | None = None
+
     @field_validator("phone")
     def validate_phone(cls, v: str):
         if v is None:
             return v
-        if not re.fullmatch(r"\+\d{11}", v):
-            raise ValueError("The phone must start + and contain 11 digits")
+        if not re.fullmatch(r"\+\d{12}", v):
+            raise ValueError("The phone must start + and contain 12 digits")
         return v
-    
+
 
 class ClientCreate(ClientBase):
     pass
@@ -25,6 +26,6 @@ class ClientCreate(ClientBase):
 class ClientRead(ClientBase):
     id: uuid.UUID
     created_at: datetime
-    
+
     class Config:
         from_attributes = True

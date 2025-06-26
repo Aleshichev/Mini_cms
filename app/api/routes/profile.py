@@ -10,13 +10,13 @@ router = APIRouter(prefix="/profiles", tags=["Profile"])
 
 @router.post("/", response_model=ProfileRead)
 async def create_new_profile(
-    user_id: ProfileCreate,
+    profile_in: ProfileCreate,
     session: AsyncSession = Depends(get_db),
 ):
-    profile = await get_profile_by_id(session, user_id)
+    profile = await get_profile_by_id(session, profile_in.user_id)
     if profile:
-        raise HTTPException(400, detail="Профиль уже существует")
-    return await create_profile(session, user_id)
+        raise HTTPException(400, detail="Profile already exists")
+    return await create_profile(session, profile_in)
 
 
 @router.get("/{profile_id}", response_model=ProfileRead)

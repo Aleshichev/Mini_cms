@@ -1,9 +1,9 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 import uuid
 
 
 class ProfileBase(BaseModel):
-    avatar_url: HttpUrl | None = None
+    avatar_url: str | None = None
     bio: str | None = None
     user_id: uuid.UUID
 

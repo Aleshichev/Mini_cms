@@ -1,8 +1,8 @@
 # app/api/routes/project.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas.project import ProjectCreate, ProjectRead
-from app.crud.project import create_project, get_project_by_id
+from app.schemas.project import ProjectCreate, ProjectRead, ProjectUpdate
+from app.crud.project import create_project, get_project_by_id, update_users_by_project
 from app.core.database import get_db
 import uuid
 
@@ -21,5 +21,12 @@ async def create_new_project(
 async def read_project(project_id: uuid.UUID, session: AsyncSession = Depends(get_db)):
     project = await get_project_by_id(session, project_id)
     if not project:
-        raise HTTPException(404, detail="Проект не найден")
+        raise HTTPException(404, detail="Project not found")
+    return project
+
+@router.patch("/{project_id}", response_model=ProjectRead)
+async def add_users_project(project_id: uuid.UUID, data: ProjectUpdate, session: AsyncSession = Depends(get_db)):
+    project = await update_users_by_project(session, project_id, data)
+    if not project:
+        raise HTTPException(404, detail="Project not found")
     return project
