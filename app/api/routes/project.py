@@ -24,8 +24,11 @@ async def read_project(project_id: uuid.UUID, session: AsyncSession = Depends(ge
         raise HTTPException(404, detail="Project not found")
     return project
 
+
 @router.patch("/{project_id}", response_model=ProjectRead)
-async def add_users_project(project_id: uuid.UUID, data: ProjectUpdate, session: AsyncSession = Depends(get_db)):
+async def add_users_project(
+    project_id: uuid.UUID, data: ProjectUpdate, session: AsyncSession = Depends(get_db)
+):
     project = await update_users_by_project(session, project_id, data)
     if not project:
         raise HTTPException(404, detail="Project not found")

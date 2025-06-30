@@ -21,7 +21,7 @@ async def get_task(session: AsyncSession, task_id: uuid.UUID) -> Task | None:
 
 async def get_tasks(
     session: AsyncSession,
-    deal_id: uuid.UUID | None = None,
+    project_id: uuid.UUID | None = None,
     manager_id: uuid.UUID | None = None,
     is_completed: bool | None = None,
     search: str | None = None,
@@ -29,8 +29,8 @@ async def get_tasks(
 ) -> list[Task] | None:
     stmt = select(Task)
 
-    if deal_id:
-        stmt = stmt.where(Task.deal_id == deal_id)
+    if project_id:
+        stmt = stmt.where(Task.project_id == project_id)
     if manager_id:
         stmt = stmt.where(Task.manager_id == manager_id)
     if is_completed is not None:

@@ -7,7 +7,7 @@ from datetime import datetime
 
 
 class ProjectBase(BaseModel):
-    name: str = ProjectsName.web_site
+    name: ProjectsName = ProjectsName.web_site
     description: str | None = None
 
     class Config:

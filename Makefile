@@ -18,6 +18,9 @@ build:
 down:
 	docker-compose down
 
+run:
+	uvicorn app.main:main_app --reload
+
 pycache_del:
 	find . -type d -name "__pycache__" -exec rm -r {} +
 	find . -type f -name "*.pyc" -delete

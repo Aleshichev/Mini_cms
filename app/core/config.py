@@ -2,16 +2,14 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "Mini CRM"
-    POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "postgres"
-    POSTGRES_SERVER: str = "db"
-    POSTGRES_PORT: str = "5432"
-    POSTGRES_DB: str = "mini_crm"
-
-    REDIS_HOST: str = "redis"
-    REDIS_PORT: int = 6379
-
+    PROJECT_NAME: str
+    POSTGRES_USER: str 
+    POSTGRES_PASSWORD: str
+    POSTGRES_SERVER: str
+    POSTGRES_PORT: str
+    POSTGRES_DB: str 
+    REDIS_HOST: str
+    REDIS_PORT: int
     class Config:
         env_file = ".env"
         

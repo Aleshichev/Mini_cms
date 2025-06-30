@@ -15,5 +15,6 @@ async def lifespan(app: FastAPI):
 
 
 main_app = FastAPI(lifespan=lifespan, title=settings.PROJECT_NAME)
+print("DATABASE_URL:", settings.DATABASE_URL)
 
 main_app.include_router(api_router)

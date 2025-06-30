@@ -7,7 +7,7 @@ class TaskBase(BaseModel):
     title: str
     description: str | None = None
     due_date: datetime | None = None
-    deal_id: uuid.UUID
+    project_id: uuid.UUID
     manager_id: uuid.UUID
 
 

@@ -14,6 +14,10 @@ class ClientBase(BaseModel):
     def validate_phone(cls, v: str):
         if v is None:
             return v
+        
+        if len(v) > 13:
+            raise ValueError("Phone number must not be longer than 13 characters")
+        
         if not re.fullmatch(r"\+\d{12}", v):
             raise ValueError("The phone must start + and contain 12 digits")
         return v

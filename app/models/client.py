@@ -10,7 +10,7 @@ class Client(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    phone: Mapped[str | None] = mapped_column(String(12), nullable=True)
+    phone: Mapped[str | None] = mapped_column(String(13), nullable=True)
     email: Mapped[str | None] = mapped_column(String, nullable=True)
     telegram_id: Mapped[int | None] = mapped_column(
         BigInteger, unique=True, nullable=True

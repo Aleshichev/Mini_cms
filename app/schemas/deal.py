@@ -9,9 +9,9 @@ from app.models.deal import DealStatus
 class DealBase(BaseModel):
     title: str
     description: str | None = None
-    status: str = DealStatus.new 
+    status: DealStatus = DealStatus.new
     client_id: uuid.UUID
-    manager_id: uuid.UUID 
+    manager_id: uuid.UUID
     project_id: uuid.UUID
 
 
@@ -25,7 +25,17 @@ class DealRead(DealBase):
 
     class Config:
         from_attributes = True
-        
+
+
 class DealReadFull(DealRead):
     client: ClientBase
     manager: UserBase
+
+
+class DealUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    status: DealStatus | None = None
+    client_id: uuid.UUID | None = None
+    manager_id: uuid.UUID | None = None
+    project_id: uuid.UUID | None = None
