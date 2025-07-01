@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.utils.security import hash_password
 from app.models.user import User
 from app.schemas.user import UserCreate
-
+from fastapi import HTTPException
 import uuid
 
 
@@ -29,8 +29,19 @@ async def create_user(session: AsyncSession, user_in: UserCreate) -> User:
     await session.refresh(user)
     return user
 
-async def get_user_by_telegram_id(session: AsyncSession, telegram_id: int) -> User | None:
+
+async def get_user_by_telegram_id(
+    session: AsyncSession, telegram_id: int
+) -> User | None:
     stmt = select(User).where(User.telegram_id == telegram_id)
     result = await session.execute(stmt)
     return result.scalars().first()
 
+
+async def delete_user(session: AsyncSession, user_id: uuid.UUID) -> None:
+    user = await session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    await session.delete(user)
+    await session.commit()

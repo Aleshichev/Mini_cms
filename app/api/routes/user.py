@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.crud.user import get_user_by_email, create_user, get_user_by_telegram_id
+from app.crud.user import get_user_by_email, create_user, get_user_by_telegram_id, delete_user
 from app.schemas.user import UserCreate, UserRead
 from app.core.database import get_db
-
+from uuid import UUID
 
 router = APIRouter(prefix="/user", tags=["Users"])
 
@@ -26,3 +26,8 @@ async def create_new_user(user_in: UserCreate, session: AsyncSession = Depends(g
             )
 
     return await create_user(session, user_in)
+
+
+@router.delete("/{user_id}", status_code=204)
+async def delete_user_by_id(user_id: UUID, session: AsyncSession = Depends(get_db)):
+    await delete_user(session, user_id)

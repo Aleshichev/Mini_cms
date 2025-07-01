@@ -5,10 +5,12 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base
 import enum
 
+
 class DealStatus(enum.Enum):
     new = "new"
     in_progress = "in_progress"
     completed = "completed"
+
 
 class Deal(Base):
     __tablename__ = "deals"
@@ -16,8 +18,12 @@ class Deal(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     title: Mapped[str] = mapped_column(String(1000), nullable=False)
     description: Mapped[str | None] = mapped_column(String(3000))
-    status: Mapped[DealStatus] = mapped_column(Enum(DealStatus), nullable=False, default=DealStatus.new)
-    manager_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    status: Mapped[DealStatus] = mapped_column(
+        Enum(DealStatus), nullable=False, default=DealStatus.new
+    )
+    manager_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+    )
     client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"))
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"))
 

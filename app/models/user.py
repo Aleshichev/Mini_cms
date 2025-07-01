@@ -47,8 +47,13 @@ class User(Base):
         back_populates="author", cascade="all, delete-orphan"
     )
 
-    profile: Mapped["Profile"] = relationship(back_populates="user", uselist=False)
+    profile: Mapped["Profile"] = relationship(
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
 
     projects: Mapped[list["Project"]] = relationship(
-        secondary="users_projects", back_populates="users"
+        secondary="users_projects", back_populates="users", passive_deletes=True
     )

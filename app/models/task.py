@@ -14,7 +14,7 @@ class Task(Base):
     due_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     completed: Mapped[bool] = mapped_column(Boolean, default=False)
 
-    manager_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    manager_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"))
 
     created_at: Mapped[datetime] = mapped_column(

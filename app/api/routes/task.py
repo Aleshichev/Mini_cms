@@ -16,7 +16,7 @@ async def create_new_task(task_in: TaskCreate, session: AsyncSession = Depends(g
 
 @router.get("/", response_model=list[TaskRead])
 async def read_tasks(
-    deal_id: uuid.UUID | None = None,
+    project_id: uuid.UUID | None = None,
     manager_id: uuid.UUID | None = None,
     is_completed: bool | None = None,
     search: str | None = None,
@@ -24,7 +24,7 @@ async def read_tasks(
     session: AsyncSession = Depends(get_db),
 ):
     tasks = await get_tasks(
-        session, deal_id, manager_id, is_completed, search, due_date_to
+        session, project_id, manager_id, is_completed, search, due_date_to
     )
     if not tasks:
         raise HTTPException(404, detail="Tasks not found")
