@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select 
 from app.models.profile import Profile
 from app.schemas.profile import ProfileCreate
 from app.models.user import User
@@ -24,3 +24,10 @@ async def create_profile(session: AsyncSession, profile_in: ProfileCreate):
     await session.commit()
     await session.refresh(profile)
     return profile
+
+async def delete_profile_by_id(session: AsyncSession, user_id: uuid.UUID) -> None:
+    profile = await get_profile_by_id(session, user_id)
+    if not profile:
+        return None
+    await session.delete(profile)
+    await session.commit()

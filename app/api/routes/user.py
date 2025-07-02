@@ -6,8 +6,9 @@ from app.crud.user import (
     get_user_by_telegram_id,
     delete_user,
     get_all_users,
+    update_user,
 )
-from app.schemas.user import UserCreate, UserRead, UserDetail
+from app.schemas.user import UserCreate, UserRead, UserDetail, UserUpdate
 from app.core.database import get_db
 from uuid import UUID
 
@@ -21,7 +22,9 @@ async def read_users(session: AsyncSession = Depends(get_db)):
 
 
 @router.get("/by_email/", response_model=UserDetail)
-async def read_user_by_email(email: str = Query(...), session: AsyncSession = Depends(get_db)):
+async def read_user_by_email(
+    email: str = Query(...), session: AsyncSession = Depends(get_db)
+):
     user = await get_user_by_email(session, email)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -50,5 +53,17 @@ async def create_new_user(user_in: UserCreate, session: AsyncSession = Depends(g
 
 @router.delete("/{user_id}", status_code=200)
 async def delete_user_by_id(user_id: UUID, session: AsyncSession = Depends(get_db)):
-    await delete_user(session, user_id)
+    user = await delete_user(session, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
     return {"message": "User deleted"}
+
+
+@router.patch("/{user_id}", response_model=UserRead)
+async def update_user_by_id(
+    user_id: UUID, user_in: UserUpdate, session: AsyncSession = Depends(get_db)
+):
+    user = await update_user(session, user_id, user_in)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user

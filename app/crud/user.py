@@ -3,9 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from app.utils.security import hash_password
 from app.models.user import User
-from app.models.project import Project
-from app.schemas.user import UserCreate
-from fastapi import HTTPException
+from app.schemas.user import UserCreate, UserUpdate
 import uuid
 
 
@@ -58,7 +56,28 @@ async def get_user_by_telegram_id(
 async def delete_user(session: AsyncSession, user_id: uuid.UUID) -> None:
     user = await session.get(User, user_id)
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        return None
 
     await session.delete(user)
     await session.commit()
+
+
+async def update_user(
+    session: AsyncSession, user_id: uuid.UUID, user_in: UserUpdate
+) -> User | None:
+    user = await session.get(User, user_id)
+    if not user:
+        return None
+
+    user_data = user_in.model_dump(exclude_unset=True)
+
+    if user_in.hashed_password is not None:
+        hashed = hash_password(user_in.hashed_password)
+        user.hashed_password = hashed
+
+    for field, value in user_data.items():
+        setattr(user, field, value)
+
+    await session.commit()
+    await session.refresh(user)
+    return user

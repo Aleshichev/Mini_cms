@@ -38,6 +38,15 @@ class UserRead(UserBase):
     id: uuid.UUID
     created_at: datetime
     
+class UserUpdate(UserBase):
+    full_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    role: Optional[UserRole] = None
+    is_active: Optional[bool] = None
+    telegram_id: Optional[int] = None
+    hashed_password: Optional[str] = None
+
+    
 class UserDetail(UserRead):
     tasks: List["TaskUserRead"] = []
     comments: List["CommentUserRead"] = []
