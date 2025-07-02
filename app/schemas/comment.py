@@ -4,6 +4,9 @@ from pydantic import BaseModel
 
 class CommentBase(BaseModel):
     content: str
+    
+    model_config = {"from_attributes": True}
+
 
 class CommentCreate(CommentBase):
     task_id: uuid.UUID
@@ -15,5 +18,6 @@ class CommentRead(CommentBase):
     task_id: uuid.UUID
     author_id: uuid.UUID | None
 
-    class Config:
-        from_attributes = True
+class CommentUserRead(CommentBase):
+    id: uuid.UUID
+    created_at: datetime

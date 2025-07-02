@@ -13,4 +13,4 @@ class Profile(Base):
     avatar_url: Mapped[str | None] = mapped_column(String, nullable=True)
     bio: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    user: Mapped["User"] = relationship(back_populates="profile")
+    user: Mapped["User"] = relationship(back_populates="profile", passive_deletes=True)

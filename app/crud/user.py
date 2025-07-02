@@ -1,14 +1,31 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from app.utils.security import hash_password
 from app.models.user import User
+from app.models.project import Project
 from app.schemas.user import UserCreate
 from fastapi import HTTPException
 import uuid
 
 
+async def get_all_users(session: AsyncSession) -> list[User]:
+    result = await session.execute(select(User))
+    return result.scalars().all()
+
+
 async def get_user_by_email(session: AsyncSession, email: str) -> User | None:
-    stmt = select(User).where(User.email == email)
+    stmt = (
+        select(User)
+        .where(User.email == email)
+        .options(
+            selectinload(User.profile),
+            selectinload(User.deals),
+            selectinload(User.tasks),
+            selectinload(User.comments),
+            selectinload(User.projects),  # <- для вложенных
+        )
+    )
     result = await session.execute(stmt)
     return result.scalars().first()
 

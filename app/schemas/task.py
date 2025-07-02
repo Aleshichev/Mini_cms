@@ -2,13 +2,16 @@ import uuid
 from datetime import datetime
 from pydantic import BaseModel
 
-
-class TaskBase(BaseModel):
+class TaskUserRead(BaseModel):
     title: str
     description: str | None = None
+    
+class TaskBase(TaskUserRead):
     due_date: datetime | None = None
     project_id: uuid.UUID
     manager_id: uuid.UUID
+
+    model_config = {"from_attributes": True}
 
 
 class TaskCreate(TaskBase):
@@ -20,5 +23,3 @@ class TaskRead(TaskBase):
     completed: bool
     created_at: datetime
 
-    class Config:
-        from_attributes = True

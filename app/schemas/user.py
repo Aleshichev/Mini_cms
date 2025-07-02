@@ -1,7 +1,12 @@
+from __future__ import annotations
 import uuid
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from app.models.user import UserRole
+from typing import List, Optional
+
+
+
 
 
 class UserBase(BaseModel):
@@ -10,6 +15,9 @@ class UserBase(BaseModel):
     role: UserRole = UserRole.manager
     is_active: bool = True
     telegram_id: int | None = None
+    
+    model_config = {"from_attributes": True}
+
 
 
 class UserCreate(UserBase):
@@ -29,6 +37,16 @@ class UserCreate(UserBase):
 class UserRead(UserBase):
     id: uuid.UUID
     created_at: datetime
+    
+class UserDetail(UserRead):
+    tasks: List["TaskUserRead"] = []
+    comments: List["CommentUserRead"] = []
+    projects: List["ProjectBase"] = []
+    
 
-    class Config:
-        from_attributes = True
+
+from app.schemas.task import TaskUserRead
+from app.schemas.comment import CommentUserRead
+from app.schemas.project import ProjectBase
+
+UserDetail.model_rebuild()
