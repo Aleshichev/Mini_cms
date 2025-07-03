@@ -42,3 +42,12 @@ async def get_tasks(
 
     result = await session.execute(stmt.order_by(Task.created_at.desc()))
     return result.scalars().all()
+
+
+async def delete_task(session: AsyncSession, task_id: uuid.UUID) -> None:
+    task = await get_task(session, task_id)
+    if not task:
+        return None
+    await session.delete(task)
+    await session.commit()
+    return task

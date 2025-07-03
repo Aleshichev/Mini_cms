@@ -11,6 +11,7 @@ from app.crud.user import (
 from app.schemas.user import UserCreate, UserRead, UserDetail, UserUpdate
 from app.core.database import get_db
 from uuid import UUID
+from app.utils.exceptions import get_or_404
 
 router = APIRouter(prefix="/user", tags=["Users"])
 
@@ -25,14 +26,13 @@ async def read_users(session: AsyncSession = Depends(get_db)):
 async def read_user_by_email(
     email: str = Query(...), session: AsyncSession = Depends(get_db)
 ):
-    user = await get_user_by_email(session, email)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    user = get_or_404(await get_user_by_email(session, email), "User not found")
     return user
 
 
 @router.post("/", response_model=UserRead)
 async def create_new_user(user_in: UserCreate, session: AsyncSession = Depends(get_db)):
+
     user = await get_user_by_email(session, email=user_in.email)
     if user:
         raise HTTPException(
@@ -51,19 +51,15 @@ async def create_new_user(user_in: UserCreate, session: AsyncSession = Depends(g
     return await create_user(session, user_in)
 
 
-@router.delete("/{user_id}", status_code=200)
-async def delete_user_by_id(user_id: UUID, session: AsyncSession = Depends(get_db)):
-    user = await delete_user(session, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return {"message": "User deleted"}
-
-
 @router.patch("/{user_id}", response_model=UserRead)
 async def update_user_by_id(
     user_id: UUID, user_in: UserUpdate, session: AsyncSession = Depends(get_db)
 ):
-    user = await update_user(session, user_id, user_in)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    user = get_or_404(await update_user(session, user_id, user_in), "User not found")
     return user
+
+
+@router.delete("/{user_id}", status_code=200)
+async def delete_user_by_id(user_id: UUID, session: AsyncSession = Depends(get_db)):
+    get_or_404(await delete_user(session, user_id), "User not found")
+    return {"message": "User deleted"}

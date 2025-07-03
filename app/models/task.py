@@ -15,14 +15,14 @@ class Task(Base):
     completed: Mapped[bool] = mapped_column(Boolean, default=False)
 
     manager_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"))
+    project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id", ondelete="CASCADE"), nullable=False)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=datetime.utcnow
     )
 
     manager: Mapped["User"] = relationship(back_populates="tasks")
-    project: Mapped["Project"] = relationship(back_populates="tasks")
+    project: Mapped["Project"] = relationship(back_populates="tasks" )
     comments: Mapped[list["Comment"]] = relationship(
         back_populates="task", cascade="all, delete-orphan"
     )

@@ -54,3 +54,11 @@ async def update_users_by_project(session: AsyncSession, project_id: UUID, data:
     await session.commit()
     await session.refresh(project)
     return project
+
+async def delete_project(session: AsyncSession, project_id: UUID) -> None:
+    project = await get_project_by_id(session, project_id)
+    if not project:
+        return None
+    await session.delete(project)
+    await session.commit()
+    return project

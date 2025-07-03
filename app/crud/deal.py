@@ -4,7 +4,7 @@ from sqlalchemy import select
 from app.models.deal import Deal
 from app.schemas.deal import DealCreate
 from sqlalchemy.orm import joinedload
-from app.utils.exception_handler import handle_db_exceptions
+from app.utils.exceptions import handle_db_exceptions
 
 
 
@@ -53,4 +53,12 @@ async def update_deal_by_id(session: AsyncSession, deal_id: uuid.UUID, deal_in: 
 
     await session.commit()
     await session.refresh(deal)
+    return deal
+
+async def delete_deal(session: AsyncSession, deal_id: uuid.UUID) -> None:
+    deal = await get_deal(session, deal_id)
+    if not deal:
+        return None
+    await session.delete(deal)
+    await session.commit()
     return deal

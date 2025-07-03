@@ -2,8 +2,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.project import ProjectCreate, ProjectRead, ProjectUpdate
-from app.crud.project import create_project, get_project_by_id, update_users_by_project
+from app.crud.project import (
+    create_project,
+    get_project_by_id,
+    update_users_by_project,
+    delete_project,
+)
 from app.core.database import get_db
+from app.utils.exceptions import get_or_404
 import uuid
 
 
@@ -33,3 +39,11 @@ async def add_users_project(
     if not project:
         raise HTTPException(404, detail="Project not found")
     return project
+
+
+@router.delete("/{project_id}", status_code=200)
+async def delete_project_by_id(
+    project_id: uuid.UUID, session: AsyncSession = Depends(get_db)
+):
+    get_or_404(await delete_project(session, project_id), "Project not found")
+    return {"message": "Project deleted"}

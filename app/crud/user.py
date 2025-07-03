@@ -21,7 +21,7 @@ async def get_user_by_email(session: AsyncSession, email: str) -> User | None:
             selectinload(User.deals),
             selectinload(User.tasks),
             selectinload(User.comments),
-            selectinload(User.projects),  # <- для вложенных
+            selectinload(User.projects),
         )
     )
     result = await session.execute(stmt)
@@ -53,15 +53,6 @@ async def get_user_by_telegram_id(
     return result.scalars().first()
 
 
-async def delete_user(session: AsyncSession, user_id: uuid.UUID) -> None:
-    user = await session.get(User, user_id)
-    if not user:
-        return None
-
-    await session.delete(user)
-    await session.commit()
-
-
 async def update_user(
     session: AsyncSession, user_id: uuid.UUID, user_in: UserUpdate
 ) -> User | None:
@@ -71,13 +62,21 @@ async def update_user(
 
     user_data = user_in.model_dump(exclude_unset=True)
 
-    if user_in.hashed_password is not None:
-        hashed = hash_password(user_in.hashed_password)
-        user.hashed_password = hashed
-
     for field, value in user_data.items():
+        if field == "hashed_password":
+            value = hash_password(value)
         setattr(user, field, value)
 
     await session.commit()
     await session.refresh(user)
+    return user
+
+
+async def delete_user(session: AsyncSession, user_id: uuid.UUID) -> None:
+    user = await session.get(User, user_id)
+    if not user:
+        return None
+
+    await session.delete(user)
+    await session.commit()
     return user

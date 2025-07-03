@@ -1,11 +1,12 @@
 from pydantic import BaseModel, field_validator
 import uuid
+from typing import Optional
+
 
 
 class ProfileBase(BaseModel):
     avatar_url: str | None = None
     bio: str | None = None
-    user_id: uuid.UUID
     
     @field_validator("avatar_url")
     def validate_avatar_url(cls, v: str):
@@ -15,8 +16,13 @@ class ProfileBase(BaseModel):
 
 
 class ProfileCreate(ProfileBase):
-    pass
+    user_id: uuid.UUID
 
 
-class ProfileRead(ProfileBase):
+class ProfileUpdate(ProfileBase):
+    avatar_url: Optional[str] = None
+    bio: Optional[str] = None
+
+
+class ProfileRead(ProfileCreate):
     id: uuid.UUID

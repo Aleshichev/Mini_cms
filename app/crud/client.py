@@ -3,13 +3,19 @@ from sqlalchemy import select
 from app.models.client import Client
 from app.schemas.client import ClientCreate
 import uuid
-from app.utils.exception_handler import handle_db_exceptions
+from app.utils.exceptions import handle_db_exceptions
+
+
+async def get_clients(session: AsyncSession) -> list[Client]:
+    result = await session.execute(select(Client))
+    return result.scalars().all()
 
 
 async def get_client_by_email(session: AsyncSession, email: str) -> Client | None:
     stmt = select(Client).where(Client.email == email)
     result = await session.execute(stmt)
     return result.scalars().first()
+
 
 @handle_db_exceptions
 async def create_client(session: AsyncSession, client_in: ClientCreate) -> Client:
@@ -23,4 +29,14 @@ async def create_client(session: AsyncSession, client_in: ClientCreate) -> Clien
     session.add(client)
     await session.commit()
     await session.refresh(client)
+    return client
+
+
+async def delete_client_by_id(session: AsyncSession, client_id: uuid.UUID) -> None:
+    client = await session.get(Client, client_id)
+    if not client:
+        return None
+
+    await session.delete(client)
+    await session.commit()
     return client

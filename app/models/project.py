@@ -29,4 +29,4 @@ class Project(Base):
     users: Mapped[list["User"]] = relationship(
         "User", secondary="users_projects", back_populates="projects", passive_deletes=True
     )
-    tasks: Mapped[list["Task"]] = relationship(back_populates="project")
+    tasks: Mapped[list["Task"]] = relationship(back_populates="project", cascade="all, delete-orphan")
