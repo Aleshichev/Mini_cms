@@ -6,7 +6,11 @@ from app.models.user import UserRole
 from typing import List, Optional
 
 
-
+class UserJWT(BaseModel):
+    # username: str
+    hashed_password: bytes
+    email: EmailStr | None = None
+    active: bool = True
 
 
 class UserBase(BaseModel):
@@ -15,9 +19,8 @@ class UserBase(BaseModel):
     role: UserRole = UserRole.manager
     is_active: bool = True
     telegram_id: int | None = None
-    
-    model_config = {"from_attributes": True}
 
+    model_config = {"from_attributes": True}
 
 
 class UserCreate(UserBase):
@@ -37,7 +40,8 @@ class UserCreate(UserBase):
 class UserRead(UserBase):
     id: uuid.UUID
     created_at: datetime
-    
+
+
 class UserUpdate(UserBase):
     full_name: Optional[str] = None
     email: Optional[EmailStr] = None
@@ -46,12 +50,11 @@ class UserUpdate(UserBase):
     telegram_id: Optional[int] = None
     hashed_password: Optional[str] = None
 
-    
+
 class UserDetail(UserRead):
     tasks: List["TaskUserRead"] = []
     comments: List["CommentUserRead"] = []
     projects: List["ProjectBase"] = []
-    
 
 
 from app.schemas.task import TaskUserRead
