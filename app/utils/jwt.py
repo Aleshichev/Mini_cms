@@ -16,7 +16,6 @@ async def encode_jwt(
         expire = now + expire_timadelta
     else:
         expire = now + timedelta(minutes=expire_minutes)
-    expire = ...
     to_encode.update(exp=expire, iat=now)
     return jwt.encode(payload, private_key, algorithm=algorithm)
 
