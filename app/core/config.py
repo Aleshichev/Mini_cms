@@ -11,6 +11,7 @@ class AuthJWT(BaseModel):
     algorithm: str = "RS256"
     token_location: str = "headers"
     access_token_expire_minutes: int = 3
+    refresh_token_expire_days: int = 5
 
 
 class Settings(BaseSettings):

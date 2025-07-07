@@ -8,10 +8,10 @@ from typing import List, Optional
 
 class UserJWT(BaseModel):
     # username: str
-    hashed_password: bytes
     email: EmailStr | None = None
+    hashed_password: bytes
     active: bool = True
-
+    
 
 class UserBase(BaseModel):
     full_name: str = Field(..., min_length=1, max_length=255)

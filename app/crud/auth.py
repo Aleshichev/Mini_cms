@@ -7,8 +7,12 @@ from app.schemas.user import UserJWT
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.utils.jwt import decode_jwt
 from jwt.exceptions import InvalidTokenError
+from app.utils.jwt import TOKEN_TYPE_FIELD
+from app.core.redis import redis_client
+from app.utils.jwt import EXPIRE_MINUTES
 
 http_bearer = HTTPBearer()
+BLACKLIST_TTL = EXPIRE_MINUTES * 60
 
 
 async def validate_auth_user(
@@ -49,6 +53,10 @@ async def get_current_token_payload(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token error",
         )
+    jti = payload.get("jti")
+    blacklist_key = f"blacklist:{jti}"
+    if await redis_client.get(blacklist_key):
+        raise HTTPException(status_code=401, detail="Token is blacklisted")
     return payload
 
 
@@ -56,7 +64,42 @@ async def get_current_auth_user(
     payload: dict = Depends(get_current_token_payload),
     session: AsyncSession = Depends(get_db),
 ) -> UserJWT:
-    email: str = payload.get("email")
+    token_type = payload.get(TOKEN_TYPE_FIELD)
+    if token_type != "access":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token type",
+        )
+    email: str = payload.get("sub")
+    if user := await get_user_by_email(session, email):
+        return user
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="User not found",
+    )
+
+
+async def get_auth_user_for_refresh(
+    credentials: HTTPAuthorizationCredentials = Depends(http_bearer),
+    payload: dict = Depends(get_current_token_payload),
+    session: AsyncSession = Depends(get_db),
+) -> UserJWT:
+    token = credentials.credentials
+    token_type = payload.get(TOKEN_TYPE_FIELD)
+    if token_type != "refresh":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token type",
+        )
+    email: str = payload.get("sub")
+    # jti: str = payload.get("jti")
+
+    key = f"refresh:{email}"
+    stored = await redis_client.get(key)
+    if stored is None or stored != token:
+        # либо истек, либо уже отозван
+        raise HTTPException(401, "Invalid refresh token")
+
     if user := await get_user_by_email(session, email):
         return user
     raise HTTPException(
@@ -74,3 +117,28 @@ async def get_current_active_auth_user(
             detail="Inactive user",
         )
     return user
+
+
+async def logout_by_token(token: str):
+    try:
+        payload = await decode_jwt(token)
+    except InvalidTokenError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        )
+    email = payload.get("sub")
+    jti: str = payload.get("jti")
+
+    key_refresh = f"refresh:{email}"
+    key_access = f"access:{email}:{jti}"
+
+    deleted = await redis_client.delete(key_refresh)
+    if deleted == 0:
+        raise HTTPException(
+            status_code=401, detail="Token already expired or logged out"
+        )
+    await redis_client.delete(key_access)
+    blacklist_key = f"blacklist:{jti}"
+    await redis_client.set(blacklist_key, "true", ex=int(BLACKLIST_TTL))
+
+    return {"message": "Successfully logged out"}
