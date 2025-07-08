@@ -10,6 +10,8 @@ from app.crud.profile import (
 from app.core.database import get_db
 from app.utils.exceptions import get_or_404
 import uuid
+from app.core.config import AM, ALL
+from app.crud.auth import require_role
 
 router = APIRouter(prefix="/profiles", tags=["Profile"])
 
@@ -18,6 +20,7 @@ router = APIRouter(prefix="/profiles", tags=["Profile"])
 async def create_new_profile(
     profile_in: ProfileCreate,
     session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(ALL)),
 ):
     profile = await get_profile_by_id(session, profile_in.user_id)
     if profile:
@@ -27,7 +30,9 @@ async def create_new_profile(
 
 @router.get("/{user_id}", response_model=ProfileRead)
 async def get_profile_details(
-    user_id: uuid.UUID, session: AsyncSession = Depends(get_db)
+    user_id: uuid.UUID,
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(AM)),
 ):
     profile = await get_profile_by_id(session, user_id)
     if not profile:
@@ -40,6 +45,7 @@ async def update_profile_by_id(
     user_id: uuid.UUID,
     profile_in: ProfileUpdate,
     session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(ALL)),
 ):
     profile = await get_profile_by_id(session, user_id)
     if not profile:
@@ -48,6 +54,10 @@ async def update_profile_by_id(
 
 
 @router.delete("/{user_id}", status_code=200)
-async def delete_profile(user_id: uuid.UUID, session: AsyncSession = Depends(get_db)):
+async def delete_profile(
+    user_id: uuid.UUID,
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(ALL)),
+):
     get_or_404(await delete_profile_by_id(session, user_id), "Profile not found")
     return {"message": "Profile deleted"}

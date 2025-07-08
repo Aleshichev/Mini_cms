@@ -9,11 +9,11 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
-class UserRole(enum.Enum):
+class UserRole(str, enum.Enum):
     admin = "admin"
     manager = "manager"
-    back_soft_dev = "back_dev"
-    front_soft_dev = "front_dev"
+    back_dev = "back_dev"
+    front_dev = "front_dev"
     tester = "tester"
     designer = "designer"
 

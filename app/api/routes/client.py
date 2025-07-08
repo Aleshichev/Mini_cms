@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.client import ClientCreate, ClientRead
+from app.crud.auth import require_role
 from app.crud.client import (
     create_client,
     get_client_by_email,
@@ -9,19 +10,27 @@ from app.crud.client import (
 )
 from app.core.database import get_db
 from app.utils.exceptions import get_or_404
+from app.core.config import AM
+
 import uuid
 
 router = APIRouter(prefix="/clients", tags=["Clients"])
 
 
 @router.get("/", response_model=list[ClientRead])
-async def read_clients(session: AsyncSession = Depends(get_db)):
+async def read_clients(
+    session: AsyncSession = Depends(get_db), user=Depends(require_role(AM))
+):
     clients = get_or_404(await get_clients(session), "clients not found")
     return clients
 
 
 @router.get("/by_email/", response_model=ClientRead)
-async def read_client(email: str = Query(...), session: AsyncSession = Depends(get_db)):
+async def read_client(
+    email: str = Query(...),
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(AM)),
+):
     clients = get_or_404(await get_client_by_email(session, email), "Client not found")
     return clients
 
@@ -39,6 +48,10 @@ async def create_new_client(
 
 
 @router.delete("/{client_id}", status_code=200)
-async def delete_client(client_id: uuid.UUID, session: AsyncSession = Depends(get_db)):
+async def delete_client(
+    client_id: uuid.UUID,
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(AM)),
+):
     get_or_404(await delete_client_by_id(session, client_id), "Client not found")
     return {"message": "Client deleted"}

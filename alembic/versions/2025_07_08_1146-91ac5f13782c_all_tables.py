@@ -1,8 +1,8 @@
-"""create all tables
+"""all tables
 
-Revision ID: 0894480ced35
+Revision ID: 91ac5f13782c
 Revises:
-Create Date: 2025-06-26 17:19:57.346972
+Create Date: 2025-07-08 11:46:42.988460
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "0894480ced35"
+revision: str = "91ac5f13782c"
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,7 +26,7 @@ def upgrade() -> None:
         "clients",
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("full_name", sa.String(length=255), nullable=False),
-        sa.Column("phone", sa.String(length=12), nullable=True),
+        sa.Column("phone", sa.String(length=13), nullable=True),
         sa.Column("email", sa.String(), nullable=True),
         sa.Column("telegram_id", sa.BigInteger(), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
@@ -62,8 +62,8 @@ def upgrade() -> None:
             sa.Enum(
                 "admin",
                 "manager",
-                "back_soft_dev",
-                "front_soft_dev",
+                "back_dev",
+                "front_dev",
                 "tester",
                 "designer",
                 name="userrole",
@@ -87,7 +87,7 @@ def upgrade() -> None:
             sa.Enum("new", "in_progress", "completed", name="dealstatus"),
             nullable=False,
         ),
-        sa.Column("manager_id", sa.UUID(), nullable=False),
+        sa.Column("manager_id", sa.UUID(), nullable=True),
         sa.Column("client_id", sa.Uuid(), nullable=False),
         sa.Column("project_id", sa.Uuid(), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
@@ -96,8 +96,7 @@ def upgrade() -> None:
             ["clients.id"],
         ),
         sa.ForeignKeyConstraint(
-            ["manager_id"],
-            ["users.id"],
+            ["manager_id"], ["users.id"], ondelete="SET NULL"
         ),
         sa.ForeignKeyConstraint(
             ["project_id"],
@@ -112,10 +111,7 @@ def upgrade() -> None:
         sa.Column("timezone", sa.String(), nullable=False),
         sa.Column("avatar_url", sa.String(), nullable=True),
         sa.Column("bio", sa.Text(), nullable=True),
-        sa.ForeignKeyConstraint(
-            ["user_id"],
-            ["users.id"],
-        ),
+        sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("user_id"),
     )
@@ -126,16 +122,14 @@ def upgrade() -> None:
         sa.Column("description", sa.String(length=3000), nullable=True),
         sa.Column("due_date", sa.DateTime(timezone=True), nullable=True),
         sa.Column("completed", sa.Boolean(), nullable=False),
-        sa.Column("manager_id", sa.UUID(), nullable=False),
+        sa.Column("manager_id", sa.UUID(), nullable=True),
         sa.Column("project_id", sa.Uuid(), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.ForeignKeyConstraint(
-            ["manager_id"],
-            ["users.id"],
+            ["manager_id"], ["users.id"], ondelete="SET NULL"
         ),
         sa.ForeignKeyConstraint(
-            ["project_id"],
-            ["projects.id"],
+            ["project_id"], ["projects.id"], ondelete="CASCADE"
         ),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -144,13 +138,9 @@ def upgrade() -> None:
         sa.Column("user_id", sa.UUID(), nullable=False),
         sa.Column("project_id", sa.Uuid(), nullable=False),
         sa.ForeignKeyConstraint(
-            ["project_id"],
-            ["projects.id"],
+            ["project_id"], ["projects.id"], ondelete="CASCADE"
         ),
-        sa.ForeignKeyConstraint(
-            ["user_id"],
-            ["users.id"],
-        ),
+        sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("user_id", "project_id"),
     )
     op.create_table(

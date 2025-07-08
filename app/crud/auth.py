@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.utils.security import verify_password
 from fastapi import Depends, Form, HTTPException, status
 from app.crud.user import get_user_by_email
-from app.core.database import get_db  # или твой путь к сессии
+from app.core.database import get_db  
 from app.schemas.user import UserJWT
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.utils.jwt import decode_jwt
@@ -40,6 +40,37 @@ async def validate_auth_user(
             detail="Inactive user",
         )
     return user
+
+
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(http_bearer),
+):
+    token = credentials.credentials
+    try:
+        payload = await decode_jwt(token)
+        # payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_email: str = payload.get("sub")
+        role: str = payload.get("role")
+        if user_email is None or role is None:
+            raise HTTPException(
+                status_code=401,
+                detail="Could not validate credentials",
+            )
+        return {"email": user_email, "role": role}
+    except InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
+
+
+def require_role(required_roles: list[str]):
+    def role_checker(current_user: dict = Depends(get_current_user)):
+        if current_user["role"] not in required_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied: insufficient permissions",
+            )
+        return current_user
+
+    return role_checker
 
 
 async def get_current_token_payload(

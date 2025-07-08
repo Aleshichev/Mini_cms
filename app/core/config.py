@@ -4,6 +4,10 @@ from pydantic import BaseModel
 
 BASE_DIR = Path(__file__).parent.parent
 
+A = ["admin"]
+AM = ["admin", "manager"]
+ALL = ["admin", "manager", "back_dev", "front_dev", "tester", "designer"]
+COMMANDS = ["back_dev", "front_dev", "tester", "designer"]
 
 class AuthJWT(BaseModel):
     private_key_path: Path = BASE_DIR / "auth" / "certs" / "jwt-private.pem"
@@ -39,6 +43,7 @@ class Settings(BaseSettings):
     @property
     def REDIS_URL(self) -> str:
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
+    
 
 
 settings = Settings()

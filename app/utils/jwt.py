@@ -57,8 +57,9 @@ async def create_jwt(
 async def create_access_token(user: UserJWT):
     jwt_payload = {
         "sub": user.email,
-        "email": user.email,
-        "password": user.hashed_password,
+        "name": user.full_name,
+        "role": user.role.value,
+        # "password": user.hashed_password,
     }
     token = await create_jwt(
         token_type=ACCESS_TOKEN_TYPE,
@@ -81,7 +82,7 @@ async def create_refresh_token(user: UserJWT):
         token_data=jwt_payload,
         expire_timadelta=REFRESH_TTL,
     )
-    payload = await decode_jwt(token)
+    # payload = await decode_jwt(token)
     # jti = payload.get("jti")
     key = f"refresh:{user.email}"
     await redis_client.set(key, token, ex=int(REFRESH_TTL.total_seconds()))

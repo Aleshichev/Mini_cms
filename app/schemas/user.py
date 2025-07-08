@@ -9,7 +9,8 @@ from typing import List, Optional
 class UserJWT(BaseModel):
     # username: str
     email: EmailStr | None = None
-    hashed_password: bytes
+    full_name: str
+    role: UserRole 
     active: bool = True
     
 

@@ -6,12 +6,18 @@ from app.schemas.task import TaskCreate, TaskRead
 from app.crud.task import create_task, get_task, get_tasks, delete_task
 from app.core.database import get_db
 from app.utils.exceptions import get_or_404
+from app.core.config import ALL
+from app.crud.auth import require_role
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
 
 @router.post("/", response_model=TaskRead)
-async def create_new_task(task_in: TaskCreate, session: AsyncSession = Depends(get_db)):
+async def create_new_task(
+    task_in: TaskCreate,
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(ALL)),
+):
     return await create_task(session, task_in)
 
 
@@ -23,6 +29,7 @@ async def read_tasks(
     search: str | None = None,
     due_date_to: datetime | None = None,
     session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(ALL)),
 ):
     tasks = get_or_404(
         await get_tasks(
@@ -34,14 +41,20 @@ async def read_tasks(
 
 
 @router.get("/{task_id}", response_model=TaskRead)
-async def read_task(task_id: uuid.UUID, session: AsyncSession = Depends(get_db)):
+async def read_task(
+    task_id: uuid.UUID,
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(ALL)),
+):
     task = get_or_404(await get_task(session, task_id), "Task not found")
     return task
 
 
 @router.delete("/{task_id}", status_code=200)
 async def delete_task_by_id(
-    task_id: uuid.UUID, session: AsyncSession = Depends(get_db)
+    task_id: uuid.UUID,
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(ALL)),
 ):
     get_or_404(await delete_task(session, task_id), "Task not found")
     return {"message": "Task deleted"}
