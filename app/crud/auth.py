@@ -8,7 +8,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.utils.jwt import decode_jwt
 from jwt.exceptions import InvalidTokenError
 from app.utils.jwt import TOKEN_TYPE_FIELD
-from app.core.redis import redis_client
+from app.redis import redis_client
 from app.utils.jwt import EXPIRE_MINUTES
 
 http_bearer = HTTPBearer()

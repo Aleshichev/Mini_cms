@@ -24,3 +24,6 @@ run:
 pycache_del:
 	find . -type d -name "__pycache__" -exec rm -r {} +
 	find . -type f -name "*.pyc" -delete
+
+#alembic revision --autogenerate -m "all tables"
+

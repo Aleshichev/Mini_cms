@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   db:
@@ -18,21 +18,42 @@ services:
     ports:
       - "6379:6379"
 
-  # api:
-  #   build: .
-  #   depends_on:
-  #     - db
-  #     - redis
-  #   ports:
-  #     - "8000:8000"
-  #   env_file: .env
-  #   environment:
-  #     POSTGRES_USER: ${POSTGRES_USER}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #     POSTGRES_SERVER: ${POSTGRES_SERVER}
-  #     POSTGRES_DB: ${POSTGRES_DB}
-  #     REDIS_HOST: ${REDIS_HOST}
-  #     REDIS_PORT: ${REDIS_PORT}
+  celery:
+    build: .
+    command: celery -A app.celery_app worker --loglevel=info
+    depends_on:
+      - redis
+      - db
+    env_file: .env
+
+  flower:
+    image: mher/flower
+    ports:
+      - "5555:5555"
+    environment:
+      - FLOWER_PORT=5555
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+      - celery
+
+  api:
+    build: .
+    depends_on:
+      - db
+      - redis
+      - flower
+      - celery
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
 
 volumes:
   pgdata:

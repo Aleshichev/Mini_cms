@@ -8,6 +8,7 @@ from app.core.database import get_db
 from app.utils.exceptions import get_or_404
 from app.core.config import ALL
 from app.crud.auth import require_role
+from app.tasks.notify import notify_about_task
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
@@ -18,7 +19,9 @@ async def create_new_task(
     session: AsyncSession = Depends(get_db),
     user=Depends(require_role(ALL)),
 ):
-    return await create_task(session, task_in)
+    new_task = await create_task(session, task_in)
+    notify_about_task.delay(str(new_task.id))
+    return new_task
 
 
 @router.get("/", response_model=list[TaskRead])

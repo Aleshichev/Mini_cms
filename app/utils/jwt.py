@@ -3,7 +3,7 @@ import uuid
 from app.core.config import settings
 from datetime import datetime, timedelta, timezone
 from app.schemas.user import UserJWT
-from app.core.redis import redis_client
+from app.redis import redis_client
 
 TOKEN_TYPE_FIELD = "type"
 ACCESS_TOKEN_TYPE = "access"
