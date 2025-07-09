@@ -19,27 +19,42 @@ services:
     container_name: redis-server
     ports:
       - "6379:6379"
-
-  celery:
-    build: .
-    container_name: celery-worker
-    command: celery -A app.celery_app worker --loglevel=info --hostname=worker123 -Q main-queue
-    depends_on:
-      - redis
-      - db
-    env_file: .env
-
-  flower:
-    image: mher/flower
-    container_name: flower-monitor
-    ports:
-      - "5555:5555"
+  
+  maildev:
+    image: maildev/maildev
+    container_name: maildev
     environment:
-      - FLOWER_PORT=5555
-      - CELERY_BROKER_URL=redis://redis:6379/0
-    depends_on:
-      - redis
-      - celery
+      - TZ=EUROPE/Kiev
+      - MAILDEV_WEB_PORT=1080
+      - MAILDEV_SMTP_PORT=1025
+    ports:
+      - "8080:1080"
+      - "1025:1025"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+
+  # celery:
+  #   build: .
+  #   container_name: celery-worker
+  #   command: celery -A app.celery_app worker --loglevel=info --hostname=worker123 -Q main-queue
+  #   depends_on:
+  #     - redis
+  #     - db
+  #   env_file: .env
+
+  # flower:
+  #   image: mher/flower
+  #   container_name: flower-monitor
+  #   ports:
+  #     - "5555:5555"
+  #   environment:
+  #     - FLOWER_PORT=5555
+  #     - CELERY_BROKER_URL=redis://redis:6379/0
+  #   depends_on:
+  #     - redis
+  #     - celery
 
   api:
     build: .
@@ -47,8 +62,9 @@ services:
     depends_on:
       - db
       - redis
-      - flower
-      - celery
+      - maildev
+      # - flower
+      # - celery
     ports:
       - "8000:8000"
     env_file: .env

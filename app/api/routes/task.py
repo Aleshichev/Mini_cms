@@ -8,7 +8,7 @@ from app.core.database import get_db
 from app.utils.exceptions import get_or_404
 from app.core.config import ALL
 from app.crud.auth import require_role
-from app.tasks.notify import notify_about_task
+# from app.tasks.notify import notify_about_task
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
@@ -20,7 +20,7 @@ async def create_new_task(
     user=Depends(require_role(ALL)),
 ):
     new_task = await create_task(session, task_in)
-    notify_about_task.delay(str(new_task.id))
+    # notify_about_task.delay(str(new_task.id))
     return new_task
 
 

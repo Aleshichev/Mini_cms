@@ -52,6 +52,11 @@ async def get_user_by_telegram_id(
     result = await session.execute(stmt)
     return result.scalars().first()
 
+async def get_user_by_id(
+    session: AsyncSession, user_id: uuid.UUID
+) -> User | None: 
+    return await session.get(User, user_id)
+
 
 async def update_user(
     session: AsyncSession, user_id: uuid.UUID, user_in: UserUpdate
