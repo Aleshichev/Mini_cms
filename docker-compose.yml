@@ -3,6 +3,7 @@ version: "3.9"
 services:
   db:
     image: postgres:16
+    container_name: postgres-db
     env_file: .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -15,12 +16,14 @@ services:
 
   redis:
     image: redis:7
+    container_name: redis-server
     ports:
       - "6379:6379"
 
   celery:
     build: .
-    command: celery -A app.celery_app worker --loglevel=info
+    container_name: celery-worker
+    command: celery -A app.celery_app worker --loglevel=info --hostname=worker123 -Q main-queue
     depends_on:
       - redis
       - db
@@ -28,6 +31,7 @@ services:
 
   flower:
     image: mher/flower
+    container_name: flower-monitor
     ports:
       - "5555:5555"
     environment:
@@ -39,6 +43,7 @@ services:
 
   api:
     build: .
+    container_name: fastapi-app
     depends_on:
       - db
       - redis
