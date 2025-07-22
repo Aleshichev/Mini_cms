@@ -56,6 +56,19 @@ services:
   #     - redis
   #     - celery
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    hostname: rabbitmq
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
   api:
     build: .
     container_name: fastapi-app
@@ -63,6 +76,7 @@ services:
       - db
       - redis
       - maildev
+      - rabbitmq
       # - flower
       # - celery
     ports:
@@ -78,3 +92,5 @@ services:
 
 volumes:
   pgdata:
+  rabbitmq-data:
+

@@ -14,7 +14,7 @@ from app.core.database import get_db
 from uuid import UUID
 from app.utils.exceptions import get_or_404
 from app.core.config import A, AM, ALL
-from app.utils.send_welcome_email import send_welcome_email
+from app.tasks import send_welcome_email
 
 router = APIRouter(prefix="/user", tags=["Users"])
 
@@ -46,7 +46,7 @@ async def create_new_user(
     user_in: UserCreate,
     session: AsyncSession = Depends(get_db),
     user=Depends(require_role(AM)),
-    background_tasks: BackgroundTasks = BackgroundTasks,
+    # background_tasks: BackgroundTasks = BackgroundTasks,
 ):
 
     user = await get_user_by_email(session, email=user_in.email)
@@ -64,8 +64,8 @@ async def create_new_user(
                 detail="The user with this telegram id already exists in the system",
             )
     user = await create_user(session, user_in)
-
-    background_tasks.add_task(send_welcome_email, user.id)
+    await send_welcome_email.kiq(user.id)             #taskiq
+    # background_tasks.add_task(send_welcome_email, user.id)
 
     return user
 

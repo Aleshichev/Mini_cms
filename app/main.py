@@ -7,6 +7,8 @@ import logging
 from app.core.database import async_session
 from app.db.init_db import init_db
 import subprocess
+from app.taskiq_broker import broker
+from app.utils.retry_broker import startup_with_retry
 
 
 logging.basicConfig(level=logging.INFO)
@@ -26,10 +28,12 @@ async def lifespan(app: FastAPI):
 
     async with async_session() as session:
         await init_db(session)
+    await startup_with_retry(broker)
     yield
     # shutdown
     logger.info("dispose engine")
     dispose()
+    await broker.shutdown()
 
 
 main_app = FastAPI(lifespan=lifespan, title=settings.PROJECT_NAME)

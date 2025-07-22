@@ -9,6 +9,7 @@ AM = ["admin", "manager"]
 ALL = ["admin", "manager", "back_dev", "front_dev", "tester", "designer"]
 COMMANDS = ["back_dev", "front_dev", "tester", "designer"]
 
+
 class AuthJWT(BaseModel):
     private_key_path: Path = BASE_DIR / "auth" / "certs" / "jwt-private.pem"
     public_key_path: Path = BASE_DIR / "auth" / "certs" / "jwt-public.pem"
@@ -16,6 +17,10 @@ class AuthJWT(BaseModel):
     token_location: str = "headers"
     access_token_expire_minutes: int = 5
     refresh_token_expire_days: int = 10
+
+
+class TaskiqConfig(BaseModel):
+    url: str = "amqp://guest:guest@rabbitmq:5672//"
 
 
 class Settings(BaseSettings):
@@ -32,6 +37,7 @@ class Settings(BaseSettings):
         env_file = ".env"
 
     auth_jwt: AuthJWT = AuthJWT()
+    taskiq: TaskiqConfig = TaskiqConfig()
 
     @property
     def DATABASE_URL(self) -> str:
@@ -43,7 +49,6 @@ class Settings(BaseSettings):
     @property
     def REDIS_URL(self) -> str:
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
-    
 
 
 settings = Settings()
