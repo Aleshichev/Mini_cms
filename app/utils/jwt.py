@@ -1,9 +1,11 @@
-import jwt
 import uuid
-from app.core.config import settings
 from datetime import datetime, timedelta, timezone
-from app.schemas.user import UserJWT
+
+import jwt
+
+from app.core.config import settings
 from app.redis import redis_client
+from app.schemas.user import UserJWT
 
 TOKEN_TYPE_FIELD = "type"
 ACCESS_TOKEN_TYPE = "access"

@@ -1,10 +1,11 @@
 import uuid
 from datetime import datetime
-from pydantic import BaseModel
-from app.models.deal import DealStatus
-from app.schemas.client import ClientBase 
-from app.schemas.user import UserBase
 
+from pydantic import BaseModel
+
+from app.models.deal import DealStatus
+from app.schemas.client import ClientBase
+from app.schemas.user import UserBase
 
 
 class DealBase(BaseModel):

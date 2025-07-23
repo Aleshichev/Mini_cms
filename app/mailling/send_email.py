@@ -1,6 +1,6 @@
 from email.message import EmailMessage
-import aiosmtplib
 
+import aiosmtplib
 
 
 # from app.config import settings

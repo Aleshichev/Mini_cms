@@ -1,20 +1,17 @@
-from app.utils.jwt import (
-    create_access_token,
-    create_refresh_token,
-)
-from app.schemas.user import UserJWT
 from fastapi import APIRouter, Depends
-from app.schemas.auth import TokenInfo
-from app.crud.auth import (
-    validate_auth_user,
-    get_current_active_auth_user,
-    get_current_token_payload,
-    get_auth_user_for_refresh,
-    logout_by_token,
-)
-from app.crud.auth import http_bearer
 from fastapi.security import HTTPAuthorizationCredentials
 
+from app.crud.auth import (
+    get_auth_user_for_refresh,
+    get_current_active_auth_user,
+    get_current_token_payload,
+    http_bearer,
+    logout_by_token,
+    validate_auth_user,
+)
+from app.schemas.auth import TokenInfo
+from app.schemas.user import UserJWT
+from app.utils.jwt import create_access_token, create_refresh_token
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 

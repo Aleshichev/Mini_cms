@@ -1,11 +1,13 @@
+from contextlib import asynccontextmanager
+
 from sqlalchemy.ext.asyncio import (
-    AsyncSession,
-    create_async_engine,
-    async_sessionmaker,
     AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
 )
 from sqlalchemy.orm import sessionmaker
-from contextlib import asynccontextmanager
+
 from app.core.config import settings
 
 engine: AsyncEngine = create_async_engine(
@@ -24,6 +26,7 @@ async def dispose():
 async def get_db():
     async with async_session() as session:
         yield session
+
 
 @asynccontextmanager
 async def get_db_context():

@@ -1,20 +1,22 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
+from uuid import UUID
+
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.config import ALL, AM, A
+from app.core.database import get_db
+from app.crud.auth import require_role
 from app.crud.user import (
-    get_user_by_email,
     create_user,
-    get_user_by_telegram_id,
     delete_user,
     get_all_users,
+    get_user_by_email,
+    get_user_by_telegram_id,
     update_user,
 )
-from app.crud.auth import require_role
-from app.schemas.user import UserCreate, UserRead, UserDetail, UserUpdate
-from app.core.database import get_db
-from uuid import UUID
-from app.utils.exceptions import get_or_404
-from app.core.config import A, AM, ALL
+from app.schemas.user import UserCreate, UserDetail, UserRead, UserUpdate
 from app.tasks import send_welcome_email
+from app.utils.exceptions import get_or_404
 
 router = APIRouter(prefix="/user", tags=["Users"])
 
@@ -45,7 +47,7 @@ async def read_user_by_email(
 async def create_new_user(
     user_in: UserCreate,
     session: AsyncSession = Depends(get_db),
-    user=Depends(require_role(AM)),
+    # user=Depends(require_role(AM)),
     # background_tasks: BackgroundTasks = BackgroundTasks,
 ):
 
@@ -64,7 +66,7 @@ async def create_new_user(
                 detail="The user with this telegram id already exists in the system",
             )
     user = await create_user(session, user_in)
-    await send_welcome_email.kiq(user.id)             #taskiq
+    await send_welcome_email.kiq(user.id)  # taskiq
     # background_tasks.add_task(send_welcome_email, user.id)
 
     return user

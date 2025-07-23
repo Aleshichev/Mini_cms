@@ -1,9 +1,11 @@
 # app/schemas/project.py
-from pydantic import BaseModel
-from app.models.project import ProjectsName
-from app.schemas.user import UserBase
 import uuid
 from datetime import datetime
+
+from pydantic import BaseModel
+
+from app.models.project import ProjectsName
+from app.schemas.user import UserBase
 
 
 class ProjectBase(BaseModel):

@@ -14,4 +14,6 @@ COPY ./app /app/app
 COPY alembic.ini /app/
 COPY alembic /app/alembic
 
-CMD ["uvicorn", "app.main:main_app", "--host", "0.0.0.0", "--port", "8000"]
+# CMD ["uvicorn", "app.main:main_app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["gunicorn", "app.main:main_app", "--workers", "2", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+

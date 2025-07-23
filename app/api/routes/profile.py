@@ -1,17 +1,19 @@
+import uuid
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas.profile import ProfileRead, ProfileCreate, ProfileUpdate
+
+from app.core.config import ALL, AM
+from app.core.database import get_db
+from app.crud.auth import require_role
 from app.crud.profile import (
     create_profile,
+    delete_profile_by_id,
     get_profile_by_id,
     update_profile,
-    delete_profile_by_id,
 )
-from app.core.database import get_db
+from app.schemas.profile import ProfileCreate, ProfileRead, ProfileUpdate
 from app.utils.exceptions import get_or_404
-import uuid
-from app.core.config import AM, ALL
-from app.crud.auth import require_role
 
 router = APIRouter(prefix="/profiles", tags=["Profile"])
 

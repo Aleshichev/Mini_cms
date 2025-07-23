@@ -1,19 +1,20 @@
 # app/api/routes/project.py
+import uuid
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas.project import ProjectCreate, ProjectRead, ProjectUpdate
+
+from app.core.config import ALL, AM
+from app.core.database import get_db
+from app.crud.auth import require_role
 from app.crud.project import (
     create_project,
+    delete_project,
     get_project_by_id,
     update_users_by_project,
-    delete_project,
 )
-from app.core.database import get_db
+from app.schemas.project import ProjectCreate, ProjectRead, ProjectUpdate
 from app.utils.exceptions import get_or_404
-import uuid
-from app.core.config import AM, ALL
-from app.crud.auth import require_role
-
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
 

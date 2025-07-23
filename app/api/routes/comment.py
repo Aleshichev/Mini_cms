@@ -1,14 +1,14 @@
+import uuid
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-import uuid
-from app.utils.exceptions import handle_db_exceptions
 
-from app.schemas.comment import CommentCreate, CommentRead
-from app.crud.comment import create_comment, get_comment, delete_comment
-from app.core.database import get_db
-from app.utils.exceptions import get_or_404
 from app.core.config import ALL
+from app.core.database import get_db
 from app.crud.auth import require_role
+from app.crud.comment import create_comment, delete_comment, get_comment
+from app.schemas.comment import CommentCreate, CommentRead
+from app.utils.exceptions import get_or_404, handle_db_exceptions
 
 router = APIRouter(prefix="/comments", tags=["Comments"])
 

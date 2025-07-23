@@ -1,11 +1,13 @@
 # app/crud/project.py
-from sqlalchemy.ext.asyncio import AsyncSession
+from uuid import UUID
+
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from app.models.project import Project
 from app.models.user import User
 from app.schemas.project import ProjectCreate
-from uuid import UUID
-from sqlalchemy.orm import selectinload
 
 
 async def get_users_by_ids(session: AsyncSession, user_ids: list[UUID]) -> list[User]:
@@ -26,7 +28,11 @@ async def create_project(session: AsyncSession, data: ProjectCreate) -> Project:
 
     session.add(project)
     await session.commit()
-    stmt = select(Project).options(selectinload(Project.users)).where(Project.id == project.id)
+    stmt = (
+        select(Project)
+        .options(selectinload(Project.users))
+        .where(Project.id == project.id)
+    )
     result = await session.execute(stmt)
     return result.scalars().first()
 
@@ -34,14 +40,16 @@ async def create_project(session: AsyncSession, data: ProjectCreate) -> Project:
 async def get_project_by_id(session: AsyncSession, project_id: UUID) -> Project | None:
     stmt = (
         select(Project)
-        .options(selectinload(Project.users))  
+        .options(selectinload(Project.users))
         .where(Project.id == project_id)
     )
     result = await session.execute(stmt)
     return result.scalars().first()
 
 
-async def update_users_by_project(session: AsyncSession, project_id: UUID, data: Project) -> Project | None:
+async def update_users_by_project(
+    session: AsyncSession, project_id: UUID, data: Project
+) -> Project | None:
     project = await get_project_by_id(session, project_id)
     if data.name is not None:
         project.name = data.name
@@ -54,6 +62,7 @@ async def update_users_by_project(session: AsyncSession, project_id: UUID, data:
     await session.commit()
     await session.refresh(project)
     return project
+
 
 async def delete_project(session: AsyncSession, project_id: UUID) -> None:
     project = await get_project_by_id(session, project_id)

@@ -1,8 +1,10 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+import uuid
+
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.models.profile import Profile
 from app.schemas.profile import ProfileCreate, ProfileUpdate
-import uuid
 
 
 async def get_profile_by_id(

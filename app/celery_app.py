@@ -8,7 +8,7 @@
 # )
 
 # celery_app.conf.update(
-#     worker_hostname="worker123",  
+#     worker_hostname="worker123",
 #     task_routes={
 #         "app.tasks.*": {"queue": "main-queue"},
 #     },

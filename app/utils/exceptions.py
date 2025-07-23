@@ -1,8 +1,8 @@
-from sqlalchemy.exc import IntegrityError
-from fastapi import HTTPException, status
 from functools import wraps
 from typing import TypeVar
 
+from fastapi import HTTPException, status
+from sqlalchemy.exc import IntegrityError
 
 T = TypeVar("T")
 

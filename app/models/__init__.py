@@ -1,11 +1,11 @@
 from .base import Base
-from .user import User
-from .project import Project
-from .deal import Deal
 from .client import Client
-from .task import Task
 from .comment import Comment
+from .deal import Deal
 from .profile import Profile
+from .project import Project
+from .task import Task
+from .user import User
 from .users_projects import UserProject
 
 __all__ = [

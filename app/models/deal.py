@@ -1,9 +1,11 @@
+import enum
 import uuid
 from datetime import datetime
-from sqlalchemy import String, ForeignKey, DateTime, Enum
+
+from sqlalchemy import DateTime, Enum, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.models.base import Base
-import enum
 
 
 class DealStatus(enum.Enum):

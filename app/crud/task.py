@@ -1,9 +1,11 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from app.models.task import Task
-from app.schemas.task import TaskCreate
 import uuid
 from datetime import datetime
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.models.task import Task
+from app.schemas.task import TaskCreate
 
 
 async def create_task(session: AsyncSession, task_in: TaskCreate) -> Task:

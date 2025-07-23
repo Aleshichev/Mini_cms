@@ -1,15 +1,17 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.models import User, Project, Profile, Task, Comment, Deal
-from app.utils.security import hash_password
-import uuid
 import logging
-from sqlalchemy import select
-from app.models.project import ProjectsName
-from app.models.client import Client
-from app.models.user import UserRole
-from app.db.data import USERS, PROJECTS
-from faker import Faker
 import random
+import uuid
+
+from faker import Faker
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.db.data import PROJECTS, USERS
+from app.models import Comment, Deal, Profile, Project, Task, User
+from app.models.client import Client
+from app.models.project import ProjectsName
+from app.models.user import UserRole
+from app.utils.security import hash_password
 
 logger = logging.getLogger(__name__)
 fake = Faker("en_US")

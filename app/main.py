@@ -1,15 +1,15 @@
-from fastapi import FastAPI
-from app.core.config import settings
-from contextlib import asynccontextmanager
-from app.core.database import dispose
-from app.api.roter import api_router
 import logging
-from app.core.database import async_session
-from app.db.init_db import init_db
 import subprocess
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
+
+from app.api.roter import api_router
+from app.core.config import settings
+from app.core.database import async_session, dispose
+from app.db.init_db import init_db
 from app.taskiq_broker import broker
 from app.utils.retry_broker import startup_with_retry
-
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

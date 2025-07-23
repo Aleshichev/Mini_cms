@@ -1,8 +1,10 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+import uuid
+
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.models.client import Client
 from app.schemas.client import ClientCreate
-import uuid
 from app.utils.exceptions import handle_db_exceptions
 
 

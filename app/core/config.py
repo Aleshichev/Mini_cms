@@ -1,6 +1,7 @@
-from pydantic_settings import BaseSettings
 from pathlib import Path
+
 from pydantic import BaseModel
+from pydantic_settings import BaseSettings
 
 BASE_DIR = Path(__file__).parent.parent
 
@@ -33,8 +34,10 @@ class Settings(BaseSettings):
     REDIS_HOST: str
     REDIS_PORT: int
 
+    # class Config:
+    #     env_file = ".env"
     class Config:
-        env_file = ".env"
+        env_file = ("ENV_FILE", ".env")
 
     auth_jwt: AuthJWT = AuthJWT()
     taskiq: TaskiqConfig = TaskiqConfig()

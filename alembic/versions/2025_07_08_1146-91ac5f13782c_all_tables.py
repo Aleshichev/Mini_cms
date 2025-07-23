@@ -8,9 +8,9 @@ Create Date: 2025-07-08 11:46:42.988460
 
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "91ac5f13782c"
@@ -95,9 +95,7 @@ def upgrade() -> None:
             ["client_id"],
             ["clients.id"],
         ),
-        sa.ForeignKeyConstraint(
-            ["manager_id"], ["users.id"], ondelete="SET NULL"
-        ),
+        sa.ForeignKeyConstraint(["manager_id"], ["users.id"], ondelete="SET NULL"),
         sa.ForeignKeyConstraint(
             ["project_id"],
             ["projects.id"],
@@ -125,21 +123,15 @@ def upgrade() -> None:
         sa.Column("manager_id", sa.UUID(), nullable=True),
         sa.Column("project_id", sa.Uuid(), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["manager_id"], ["users.id"], ondelete="SET NULL"
-        ),
-        sa.ForeignKeyConstraint(
-            ["project_id"], ["projects.id"], ondelete="CASCADE"
-        ),
+        sa.ForeignKeyConstraint(["manager_id"], ["users.id"], ondelete="SET NULL"),
+        sa.ForeignKeyConstraint(["project_id"], ["projects.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
         "users_projects",
         sa.Column("user_id", sa.UUID(), nullable=False),
         sa.Column("project_id", sa.Uuid(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["project_id"], ["projects.id"], ondelete="CASCADE"
-        ),
+        sa.ForeignKeyConstraint(["project_id"], ["projects.id"], ondelete="CASCADE"),
         sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("user_id", "project_id"),
     )

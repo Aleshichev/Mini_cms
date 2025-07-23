@@ -1,8 +1,9 @@
-from app.mailling.send_welcome_email import send_welcome_email as send
-from asyncio import sleep
-from app.taskiq_broker import broker
-import uuid
 import logging
+import uuid
+from asyncio import sleep
+
+from app.mailling.send_welcome_email import send_welcome_email as send
+from app.taskiq_broker import broker
 
 log = logging.getLogger(__name__)
 

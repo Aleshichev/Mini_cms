@@ -1,10 +1,12 @@
+import uuid
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from app.utils.security import hash_password
+
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
-import uuid
+from app.utils.security import hash_password
 
 
 async def get_all_users(session: AsyncSession) -> list[User]:
@@ -52,9 +54,8 @@ async def get_user_by_telegram_id(
     result = await session.execute(stmt)
     return result.scalars().first()
 
-async def get_user_by_id(
-    session: AsyncSession, user_id: uuid.UUID
-) -> User | None: 
+
+async def get_user_by_id(session: AsyncSession, user_id: uuid.UUID) -> User | None:
     return await session.get(User, user_id)
 
 

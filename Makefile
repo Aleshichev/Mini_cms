@@ -1,4 +1,4 @@
-.PHONY: isort black format
+.PHONY: isort black format build down run pycache_del start stop logs
 
 # Запустить isort для сортировки импортов по всему проекту
 isort:
@@ -13,13 +13,22 @@ format: isort black
 
 # Запустить docker-compose
 build:	
-	docker-compose up --build -d
+	docker compose up --build -d
 
 down:
 	docker-compose down
 
 run:
-	uvicorn app.main:main_app --reload
+	docker compose up -d
+#uvicorn app.main:main_app --reload
+start:
+	docker compose start
+
+stop:
+	docker compose stop
+
+logs:
+	docker compose logs -f
 
 pycache_del:
 	find . -type d -name "__pycache__" -exec rm -r {} +

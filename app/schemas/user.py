@@ -1,18 +1,21 @@
 from __future__ import annotations
+
 import uuid
 from datetime import datetime
-from pydantic import BaseModel, EmailStr, Field, field_validator
-from app.models.user import UserRole
 from typing import List, Optional
+
+from pydantic import BaseModel, EmailStr, Field, field_validator
+
+from app.models.user import UserRole
 
 
 class UserJWT(BaseModel):
     # username: str
     email: EmailStr | None = None
     full_name: str
-    role: UserRole 
+    role: UserRole
     active: bool = True
-    
+
 
 class UserBase(BaseModel):
     full_name: str = Field(..., min_length=1, max_length=255)
@@ -58,8 +61,8 @@ class UserDetail(UserRead):
     projects: List["ProjectBase"] = []
 
 
-from app.schemas.task import TaskUserRead
 from app.schemas.comment import CommentUserRead
 from app.schemas.project import ProjectBase
+from app.schemas.task import TaskUserRead
 
 UserDetail.model_rebuild()

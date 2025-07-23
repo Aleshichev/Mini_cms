@@ -1,13 +1,16 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 import uuid
 from datetime import datetime
-from app.schemas.task import TaskCreate, TaskRead
-from app.crud.task import create_task, get_task, get_tasks, delete_task
-from app.core.database import get_db
-from app.utils.exceptions import get_or_404
+
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.core.config import ALL
+from app.core.database import get_db
 from app.crud.auth import require_role
+from app.crud.task import create_task, delete_task, get_task, get_tasks
+from app.schemas.task import TaskCreate, TaskRead
+from app.utils.exceptions import get_or_404
+
 # from app.tasks.notify import notify_about_task
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])

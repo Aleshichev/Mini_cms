@@ -1,8 +1,10 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+import uuid
+
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.models.comment import Comment
 from app.schemas.comment import CommentCreate
-import uuid
 
 
 async def create_comment(session: AsyncSession, comment_in: CommentCreate) -> Comment:

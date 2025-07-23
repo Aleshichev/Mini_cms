@@ -1,12 +1,14 @@
+import uuid
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas.deal import DealCreate, DealRead, DealReadFull, DealUpdate
-from app.crud.deal import create_deal, get_deal_full, update_deal_by_id, delete_deal
-from app.core.database import get_db
-import uuid
-from app.utils.exceptions import get_or_404
+
 from app.core.config import AM
+from app.core.database import get_db
 from app.crud.auth import require_role
+from app.crud.deal import create_deal, delete_deal, get_deal_full, update_deal_by_id
+from app.schemas.deal import DealCreate, DealRead, DealReadFull, DealUpdate
+from app.utils.exceptions import get_or_404
 
 router = APIRouter(prefix="/deals", tags=["Deals"])
 

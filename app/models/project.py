@@ -1,9 +1,11 @@
-from uuid import uuid4, UUID
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Text, DateTime, Enum
-from datetime import datetime
-from app.models import Base
 import enum
+from datetime import datetime
+from uuid import UUID, uuid4
+
+from sqlalchemy import DateTime, Enum, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.models import Base
 
 
 class ProjectsName(enum.Enum):
@@ -17,7 +19,9 @@ class Project(Base):
     __tablename__ = "projects"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    name: Mapped[ProjectsName] = mapped_column(Enum(ProjectsName), nullable=False, default=ProjectsName.web_site)
+    name: Mapped[ProjectsName] = mapped_column(
+        Enum(ProjectsName), nullable=False, default=ProjectsName.web_site
+    )
     description: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=datetime.utcnow
@@ -27,6 +31,11 @@ class Project(Base):
     )
 
     users: Mapped[list["User"]] = relationship(
-        "User", secondary="users_projects", back_populates="projects", passive_deletes=True
+        "User",
+        secondary="users_projects",
+        back_populates="projects",
+        passive_deletes=True,
     )
-    tasks: Mapped[list["Task"]] = relationship(back_populates="project", cascade="all, delete-orphan")
+    tasks: Mapped[list["Task"]] = relationship(
+        back_populates="project", cascade="all, delete-orphan"
+    )

@@ -1,4 +1,3 @@
-
 USERS = [
     {"full_name": "Admin User", "email": "admin@example.com", "role": "admin"},
     {"full_name": "Manager One", "email": "manager1@example.com", "role": "manager"},
@@ -14,5 +13,4 @@ PROJECTS = [
     {"name": "mobile_app", "description": "Description Two"},
     {"name": "desktop_app", "description": "Description Three"},
     {"name": "telegram_bot", "description": "Description Four"},
-
 ]

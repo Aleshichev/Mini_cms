@@ -1,15 +1,14 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.utils.security import verify_password
 from fastapi import Depends, Form, HTTPException, status
-from app.crud.user import get_user_by_email
-from app.core.database import get_db  
-from app.schemas.user import UserJWT
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from app.utils.jwt import decode_jwt
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt.exceptions import InvalidTokenError
-from app.utils.jwt import TOKEN_TYPE_FIELD
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.database import get_db
+from app.crud.user import get_user_by_email
 from app.redis import redis_client
-from app.utils.jwt import EXPIRE_MINUTES
+from app.schemas.user import UserJWT
+from app.utils.jwt import EXPIRE_MINUTES, TOKEN_TYPE_FIELD, decode_jwt
+from app.utils.security import verify_password
 
 http_bearer = HTTPBearer()
 BLACKLIST_TTL = EXPIRE_MINUTES * 60

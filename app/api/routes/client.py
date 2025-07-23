@@ -1,18 +1,19 @@
+import uuid
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas.client import ClientCreate, ClientRead
+
+from app.core.config import AM
+from app.core.database import get_db
 from app.crud.auth import require_role
 from app.crud.client import (
     create_client,
+    delete_client_by_id,
     get_client_by_email,
     get_clients,
-    delete_client_by_id,
 )
-from app.core.database import get_db
+from app.schemas.client import ClientCreate, ClientRead
 from app.utils.exceptions import get_or_404
-from app.core.config import AM
-
-import uuid
 
 router = APIRouter(prefix="/clients", tags=["Clients"])
 
