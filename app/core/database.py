@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-
+import pytest
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -32,3 +32,14 @@ async def get_db():
 async def get_db_context():
     async with async_session() as session:
         yield session
+
+@pytest.fixture()
+async def db_session():
+    async with engine.connect() as conn:
+        trans = await conn.begin()
+        async_session_for_test = async_sessionmaker(bind=conn, expire_on_commit=False, autoflush=False)
+
+        async with async_session_for_test() as session:
+            yield session
+
+        await trans.rollback()

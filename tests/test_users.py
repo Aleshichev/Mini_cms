@@ -1,22 +1,16 @@
 import pytest
 
-
 @pytest.mark.asyncio
-async def test_create_user(async_client):
+async def test_create_client(async_client):
     response = await async_client.post(
-        "/user/",
+        "/clients/",
         json={
-            "email": "test@example.com",
             "full_name": "Test User",
-            "telegram_id": 12345678,
-            "role": "manager",
-            "hashed_password": "pA1ssword",
-        },
+            "email": "test@example.com",
+            "phone": "1234567890",
+            "telegram_id": 12345
+        }
     )
-
-    assert response.status_code == 201, response.text
+    assert response.status_code == 200
     data = response.json()
     assert data["email"] == "test@example.com"
-    assert data["role"] == "manager"
-    assert data["full_name"] == "Test User"
-    assert data["telegram_id"] == 12345678

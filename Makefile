@@ -34,3 +34,10 @@ pycache_del:
 	find . -type d -name "__pycache__" -exec rm -r {} +
 	find . -type f -name "*.pyc" -delete
 
+test:
+	docker compose -f docker-compose-test.yml up --build -d --remove-orphans
+	docker compose -f docker-compose-test.yml exec -it test_app bash -c "pytest tests/ --maxfail=5 -v"
+
+
+test-down:
+	docker compose -f docker-compose-test.yml down

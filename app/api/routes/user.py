@@ -47,8 +47,8 @@ async def read_user_by_email(
 async def create_new_user(
     user_in: UserCreate,
     session: AsyncSession = Depends(get_db),
-    # user=Depends(require_role(AM)),
-    # background_tasks: BackgroundTasks = BackgroundTasks,
+    user=Depends(require_role(AM)),
+    #background_tasks: BackgroundTasks = BackgroundTasks,
 ):
 
     user = await get_user_by_email(session, email=user_in.email)

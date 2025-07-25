@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import os
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
@@ -34,10 +34,9 @@ class Settings(BaseSettings):
     REDIS_HOST: str
     REDIS_PORT: int
 
-    # class Config:
-    #     env_file = ".env"
     class Config:
-        env_file = ("ENV_FILE", ".env")
+        env_file = ".env"
+ 
 
     auth_jwt: AuthJWT = AuthJWT()
     taskiq: TaskiqConfig = TaskiqConfig()
@@ -48,9 +47,16 @@ class Settings(BaseSettings):
             f"postgresql+asyncpg://{self.POSTGRES_USER}:"
             f"{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
         )
+    @property
+    def SYNC_DATABASE_URL(self) -> str:
+        return (
+            f"postgresql+psycopg2://{self.POSTGRES_USER}:"
+            f"{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        )
 
     @property
     def REDIS_URL(self) -> str:
+
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
 
 
