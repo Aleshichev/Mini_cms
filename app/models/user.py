@@ -28,7 +28,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String, nullable=False, unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     role: Mapped[UserRole] = mapped_column(
-        Enum(UserRole), default=UserRole.manager, nullable=False
+        Enum(UserRole), nullable=False
     )
     telegram_id: Mapped[int | None] = mapped_column(
         BigInteger, unique=True, nullable=True

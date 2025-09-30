@@ -1,6 +1,7 @@
 import logging
 import subprocess
 from contextlib import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI
 
@@ -41,5 +42,14 @@ async def lifespan(app: FastAPI):
 main_app = FastAPI(lifespan=lifespan, title=settings.PROJECT_NAME)
 
 main_app.include_router(api_router)
+
+main_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 register_middlewares(main_app)

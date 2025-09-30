@@ -99,6 +99,13 @@ services:
     #   --log-level info
     #   --access-logfile -
     #   --error-logfile -
+  frontend:
+    build: ./frontend   # папка с React-Admin проектом
+    container_name: react-admin-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
 
 volumes:
   pgdata:

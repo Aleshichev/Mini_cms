@@ -5,3 +5,5 @@ certs
 certs/
 jwt-private.pem
 jwt-public.pem
+.pytest_cache/
+.vscode/
