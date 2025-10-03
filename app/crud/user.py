@@ -31,12 +31,12 @@ async def get_user_by_email(session: AsyncSession, email: str) -> User | None:
 
 
 async def create_user(session: AsyncSession, user_in: UserCreate) -> User:
-    hashed = hash_password(user_in.hashed_password)
+    hashed_password = hash_password(user_in.password)
     user = User(
         id=uuid.uuid4(),
         full_name=user_in.full_name,
         email=user_in.email,
-        hashed_password=hashed,
+        hashed_password=hashed_password,
         role=user_in.role,
         is_active=user_in.is_active,
         telegram_id=user_in.telegram_id,
@@ -56,7 +56,20 @@ async def get_user_by_telegram_id(
 
 
 async def get_user_by_id(session: AsyncSession, user_id: uuid.UUID) -> User | None:
-    return await session.get(User, user_id)
+    stmt = (
+        select(User)
+        .options(
+            selectinload(User.profile),
+            selectinload(User.deals),
+            selectinload(User.tasks),
+            selectinload(User.comments),
+            selectinload(User.projects),
+        )
+        .where(User.id == user_id)
+    )
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()
+    
 
 
 async def update_user(
@@ -67,9 +80,14 @@ async def update_user(
         return None
 
     user_data = user_in.model_dump(exclude_unset=True)
+    
+    not_nullable_fields = {"full_name", "email", "role", "hashed_password"}
+
 
     for field, value in user_data.items():
-        if field == "hashed_password":
+        if field in not_nullable_fields and value is None:
+            continue
+        if field == "hashed_password" and value is not None:
             value = hash_password(value)
         setattr(user, field, value)
 

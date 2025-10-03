@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.core.database import async_session, dispose
 from app.db.init_db import init_db
 from app.taskiq_broker import broker
-# from app.utils.retry_broker import startup_with_retry
+from app.utils.retry_broker import startup_with_retry
 from app.middleware import register_middlewares
 
 
@@ -31,12 +31,12 @@ async def lifespan(app: FastAPI):
 
     async with async_session() as session:
         await init_db(session)
-    # await startup_with_retry(broker)   # taskiq
+    await startup_with_retry(broker)   # taskiq
     yield
     # shutdown
     logger.info("dispose engine")
     dispose()
-    # await broker.shutdown()            # taskiq
+    await broker.shutdown()            # taskiq
 
 
 main_app = FastAPI(lifespan=lifespan, title=settings.PROJECT_NAME)

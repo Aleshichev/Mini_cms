@@ -3,7 +3,7 @@ import api from "./axios";
 
 const dataProvider: DataProvider = {
   getList: async (resource, params) => {
-    const { data } = await api.get(`/${resource}/`, {
+    const { data } = await api.get(`/${resource}`, {
       params: {
         // react-admin присылает pagination + sort
         sort: JSON.stringify(params.sort),
@@ -23,22 +23,22 @@ const dataProvider: DataProvider = {
   },
 
   getOne: async (resource, params) => {
-    const { data } = await api.get(`/${resource}/${params.id}/`);
+    const { data } = await api.get(`/${resource}/${params.id}`);
     return { data };
   },
 
   create: async (resource, params) => {
-    const { data } = await api.post(`/${resource}/`, params.data);
+    const { data } = await api.post(`/${resource}`, params.data);
     return { data };
   },
 
   update: async (resource, params) => {
-    const { data } = await api.put(`/${resource}/${params.id}/`, params.data);
+    const { data } = await api.put(`/${resource}/${params.id}`, params.data);
     return { data };
   },
 
   delete: async (resource, params) => {
-    await api.delete(`/${resource}/${params.id}/`);
+    await api.delete(`/${resource}/${params.id}`);
     return { data: params.previousData };
   },
 

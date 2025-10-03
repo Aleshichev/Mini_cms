@@ -1,7 +1,8 @@
 import { Admin, Resource } from "react-admin";
 import { authProvider } from "./api/authProvider";
 import { Dashboard } from "./pages/Dashboard";
-import { UserList } from "./resources/users";
+import { UserList, UserEdit, UserCreate } from "./resources/users";
+// import Users from "./resources/users";
 // import { ClientList } from "./resources/clients";
 // import { DealList } from "./resources/deals";
 // import { TaskList } from "./resources/tasks";
@@ -17,7 +18,8 @@ function App() {
       authProvider={authProvider}
       dataProvider={dataProvider}
     >
-      <Resource name="user" list={UserList} />
+      <Resource name="user" list={UserList} edit={UserEdit} create={UserCreate} />
+      {/* <Resource name="user" {...Users} /> */}
       {/* <Resource name="clients" list={ClientList} />
       <Resource name="deals" list={DealList} />
       <Resource name="tasks" list={TaskList} />

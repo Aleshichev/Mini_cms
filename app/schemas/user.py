@@ -28,9 +28,9 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    hashed_password: str = Field(..., min_length=6, max_length=100)
+    password: str = Field(..., min_length=6, max_length=100)
 
-    @field_validator("hashed_password")
+    @field_validator("password")
     def validate_password(cls, v):
         if len(v) < 6:
             raise ValueError("The password is too short")

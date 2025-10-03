@@ -4,7 +4,7 @@ export const Dashboard = () => (
   <Card>
     <CardContent>
       <Typography variant="h5">Admin Dashboard</Typography>
-      <Typography>Добро пожаловать в админку 🚀</Typography>
+      <Typography>Welcome to the Admin Dashboard 🚀</Typography>
     </CardContent>
   </Card>
 );

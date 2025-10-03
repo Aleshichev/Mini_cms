@@ -10,6 +10,7 @@ from app.crud.user import (
     create_user,
     delete_user,
     get_all_users,
+    get_user_by_id,
     get_user_by_email,
     get_user_by_telegram_id,
     update_user,
@@ -31,6 +32,15 @@ async def read_users(
 ):
     users = await get_all_users(session)
     return users
+
+@router.get("/{user_id}", response_model=UserDetail)
+async def read_user_by_id(
+    user_id: UUID,
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(AM)),
+):
+    user = get_or_404(await get_user_by_id(session, user_id), "User not found")
+    return user
 
 
 @router.get("/by_email/", response_model=UserDetail)
@@ -71,7 +81,7 @@ async def create_new_user(
 
     return user
 
-
+@router.put("/{user_id}", response_model=UserRead)
 @router.patch("/{user_id}", response_model=UserRead)
 async def update_user_by_id(
     user_id: UUID,
