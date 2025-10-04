@@ -18,7 +18,7 @@ function App() {
       authProvider={authProvider}
       dataProvider={dataProvider}
     >
-      <Resource name="user" list={UserList} edit={UserEdit} create={UserCreate} />
+      <Resource name="users" list={UserList} edit={UserEdit} create={UserCreate} />
       {/* <Resource name="user" {...Users} /> */}
       {/* <Resource name="clients" list={ClientList} />
       <Resource name="deals" list={DealList} />

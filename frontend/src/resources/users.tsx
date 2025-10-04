@@ -1,49 +1,3 @@
-// import { List, Datagrid, TextField } from "react-admin";
-
-// export const UserList = () => (
-//   <List>
-//     <Datagrid rowClick="edit">
-//       <TextField source="id" />
-//       <TextField source="email" />
-//       <TextField source="full_name" />
-//       <TextField source="role" />
-//     </Datagrid>
-//   </List>
-// );
-// --------------------------------------------------------------
-// import { List, Datagrid, TextField, EditButton, DeleteButton, Edit, SimpleForm, TextInput, Create } from "react-admin";
-
-// export default {
-//   list: () => (
-//     <List>
-//       <Datagrid rowClick="edit">
-//         <TextField source="id" />
-//         <TextField source="email" />
-//         <TextField source="full_name" />
-//         <TextField source="role" />
-//         <EditButton />
-//         <DeleteButton />
-//       </Datagrid>
-//     </List>
-//   ),
-//   edit: () => (
-//     <Edit>
-//       <SimpleForm>
-//         <TextInput source="email" />
-//         <TextField source="full_name" />
-//       </SimpleForm>
-//     </Edit>
-//   ),
-//   create: () => (
-//     <Create>
-//       <SimpleForm>
-//         <TextInput source="email" />
-//         <TextField source="username" />
-//       </SimpleForm>
-//     </Create>
-//   )
-// };
-// --------------------------------------------------------------
 import { 
   List, Datagrid, TextField, EditButton, DeleteButton, 
   Edit, SimpleForm, TextInput, Create, SelectInput, BooleanInput, NumberInput 
@@ -61,6 +15,16 @@ const roles = [
 
 const validatePassword = (value: string) => {
   if (!value) return "Password is required";
+  if (value.length < 6) return "Password must be at least 6 characters";
+  if (!/[0-9]/.test(value)) return "Password must contain a number";
+  if (!/[A-Z]/.test(value)) return "Password must contain an uppercase letter";
+  return undefined;
+};
+
+const validatePasswordUpdate = (value: string) => {
+  if (!value || value.trim() === "") {
+    return undefined; // empty field
+  }
   if (value.length < 6) return "Password must be at least 6 characters";
   if (!/[0-9]/.test(value)) return "Password must contain a number";
   if (!/[A-Z]/.test(value)) return "Password must contain an uppercase letter";
@@ -85,9 +49,9 @@ export const UserList = () => (
 export const UserEdit = () => (
   <Edit>
     <SimpleForm>
-      <TextInput source="full_name" validate={[required()]}/>
-      <TextInput source="email" validate={[required(), email()]}/>
-      <SelectInput source="role" label="Role" choices={roles} validate={[required()]} />
+      <TextInput source="full_name" validate={[required()]} />
+      <TextInput source="email" validate={[required(),email()]}/>
+      <SelectInput source="role" label="Role" choices={roles} />
       <BooleanInput source="is_active" />
       <NumberInput
         source="telegram_id"
@@ -95,7 +59,7 @@ export const UserEdit = () => (
         parse={(value) => (value === "" ? null : Number(value))}
         format={(value) => (value == null ? "" : value)}
       />
-      <TextInput source="password" type="password" label="Password" validate={validatePassword} />
+      <TextInput source="password" type="password" label="Password"/>
     </SimpleForm>
   </Edit>
 );

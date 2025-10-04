@@ -19,7 +19,7 @@ from app.schemas.user import UserCreate, UserDetail, UserRead, UserUpdate
 from app.tasks import send_welcome_email
 from app.utils.exceptions import get_or_404
 
-router = APIRouter(prefix="/user", tags=["Users"])
+router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.get(
