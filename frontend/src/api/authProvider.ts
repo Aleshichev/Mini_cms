@@ -54,7 +54,7 @@ export const authProvider: AuthProvider = {
   getIdentity: async () => {
     const { data } = await api.get("/auth/user/me/");
     return {
-      id: data.email,
+      id: data.id,
       fullName: data.full_name,
       role: data.role,
     };

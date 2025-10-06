@@ -24,6 +24,9 @@ const dataProvider: DataProvider = {
 
   getOne: async (resource, params) => {
     const { data } = await api.get(`/${resource}/${params.id}`);
+    if (data.user_id) {
+      data.id = data.user_id;
+    }
     return { data };
   },
 

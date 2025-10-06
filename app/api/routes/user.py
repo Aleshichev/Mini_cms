@@ -28,7 +28,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
 )
 async def read_users(
     session: AsyncSession = Depends(get_db),
-    user=Depends(require_role(A)),
+    # user=Depends(require_role(A)),
 ):
     users = await get_all_users(session)
     return users
@@ -37,7 +37,7 @@ async def read_users(
 async def read_user_by_id(
     user_id: UUID,
     session: AsyncSession = Depends(get_db),
-    user=Depends(require_role(AM)),
+    # user=Depends(require_role(AM)),
 ):
     user = get_or_404(await get_user_by_id(session, user_id), "User not found")
     return user
@@ -47,7 +47,7 @@ async def read_user_by_id(
 async def read_user_by_email(
     email: str = Query(...),
     session: AsyncSession = Depends(get_db),
-    user=Depends(require_role(AM)),
+    # user=Depends(require_role(AM)),
 ):
     user = get_or_404(await get_user_by_email(session, email), "User not found")
     return user
@@ -57,7 +57,7 @@ async def read_user_by_email(
 async def create_new_user(
     user_in: UserCreate,
     session: AsyncSession = Depends(get_db),
-    user=Depends(require_role(AM)),
+    # user=Depends(require_role(AM)),
     #background_tasks: BackgroundTasks = BackgroundTasks,
 ):
 
@@ -87,7 +87,7 @@ async def update_user_by_id(
     user_id: UUID,
     user_in: UserUpdate,
     session: AsyncSession = Depends(get_db),
-    user=Depends(require_role(ALL)),
+    # user=Depends(require_role(ALL)),
 ):
     user = get_or_404(await update_user(session, user_id, user_in), "User not found")
     return user
@@ -97,7 +97,7 @@ async def update_user_by_id(
 async def delete_user_by_id(
     user_id: UUID,
     session: AsyncSession = Depends(get_db),
-    user=Depends(require_role(A)),
+    # user=Depends(require_role(A)),
 ):
     get_or_404(await delete_user(session, user_id), "User not found")
     return {"message": "User deleted"}

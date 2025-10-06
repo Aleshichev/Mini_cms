@@ -21,7 +21,8 @@ class AuthJWT(BaseModel):
 
 
 class TaskiqConfig(BaseModel):
-    url: str = "amqp://guest:guest@rabbitmq:5672//"
+    # url: str = "amqp://guest:guest@rabbitmq:5672//"
+    url: str = "amqp://guest:guest@localhost:5672//"
 
 
 class Settings(BaseSettings):

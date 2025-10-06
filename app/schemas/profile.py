@@ -25,4 +25,5 @@ class ProfileUpdate(ProfileBase):
 
 
 class ProfileRead(ProfileCreate):
-    id: uuid.UUID
+    pass
+ 

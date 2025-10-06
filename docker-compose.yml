@@ -69,27 +69,27 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
 
-  api:
-    build: .
-    container_name: fastapi-app
-    depends_on:
-      - db
-      - redis
-      - maildev
-      - rabbitmq
+  # api:
+  #   build: .
+  #   container_name: fastapi-app
+  #   depends_on:
+  #     - db
+  #     - redis
+  #     - maildev
+  #     - rabbitmq
 
-      # - celery
-      # - flower
-    ports:
-      - "8000:8000"
-    env_file: .env
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_SERVER: ${POSTGRES_SERVER}
-      POSTGRES_DB: ${POSTGRES_DB}
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
+  #     # - celery
+  #     # - flower
+  #   ports:
+  #     - "8000:8000"
+  #   env_file: .env
+  #   environment:
+  #     POSTGRES_USER: ${POSTGRES_USER}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #     POSTGRES_SERVER: ${POSTGRES_SERVER}
+  #     POSTGRES_DB: ${POSTGRES_DB}
+  #     REDIS_HOST: ${REDIS_HOST}
+  #     REDIS_PORT: ${REDIS_PORT}
     # command: >
     #   gunicorn app.main:main_app
     #   --workers 2
@@ -98,13 +98,13 @@ services:
     #   --log-level info
     #   --access-logfile -
     #   --error-logfile -
-  frontend:
-    build: ./frontend   # папка с React-Admin проектом
-    container_name: react-admin-frontend
-    ports:
-      - "3000:80"
-    depends_on:
-      - api
+  # frontend:
+  #   build: ./frontend   # папка с React-Admin проектом
+  #   container_name: react-admin-frontend
+  #   ports:
+  #     - "3000:80"
+  #   depends_on:
+  #     - api
 
 volumes:
   pgdata:
