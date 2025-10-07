@@ -6,7 +6,7 @@ import { TextField as TextFieldMui} from "@mui/material";
 import { required, email, minLength } from "ra-core";
 import { Card, CardContent } from "@mui/material";
 import { Button, Dialog, DialogContent } from "@mui/material";
-import { useRecordContext } from "react-admin";
+import { useRecordContext, useGetOne } from "react-admin";
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -75,33 +75,59 @@ const MoreInfoButton = () => {
   if (!record) return null;
 
   const handleOpen = (e: React.MouseEvent) => {
-    e.stopPropagation(); // <- важно — предотвратить rowClick
+    e.stopPropagation();
     setOpen(true);
   };
 
-  const handleClose = (_event?: {}, _reason?: "backdropClick" | "escapeKeyDown") => {
-    setOpen(false);
-  };
+  const handleClose = () => setOpen(false);
 
+  // Выполняем запрос к API /users/:id только если диалог открыт
+  const { data, isLoading } = useGetOne("users", { id: record.id }, { enabled: open });
+  {console.log("User data:", data)}
   return (
     <>
       <Button size="small" onClick={handleOpen}>
-        Подробнее
+        More Info
       </Button>
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        // предотвращаем случайное всплытие внутри диалога
-        onClick={(e) => e.stopPropagation()}
-      >
-        <DialogTitle>Information about user</DialogTitle>
+      <Dialog open={open} onClose={handleClose} onClick={(e) => e.stopPropagation()}>
+        <DialogTitle>Info about {data?.full_name}</DialogTitle>
         <DialogContent dividers>
-          <Typography><b>Email:</b> {record.email}</Typography>
-          <Typography><b>Projects:</b> {record.projects}</Typography>
-          <Typography><b>Tasks:</b> {record.tasks}</Typography>
-          <Typography><b>Comments:</b> {record.comments}</Typography>
-          {/* добавить что нужно */}
+          {isLoading && <CircularProgress />}
+          {data && (
+            <>
+              <Typography><b>Name:</b> {data.full_name}</Typography>
+              <Typography><b>Email:</b> {data.email}</Typography>
+              <Typography><b>Role:</b> {data.role}</Typography>
+              
+              <Typography sx={{ mt: 2 }}><b>Deals:</b></Typography>
+             {data.deals?.length ? (
+               data.deals.map((t: any) => (
+                 <Typography key={t.id} sx={{ pl: 2 }}>• {t.title}</Typography>
+               ))
+             ) : (
+               <Typography sx={{ pl: 2 }}>No deals</Typography>
+             )}
+
+              <Typography sx={{ mt: 2 }}><b>Projects:</b></Typography>
+              {data.projects?.length ? (
+                data.projects.map((p: any) => (
+                  <Typography key={p.id} sx={{ pl: 2 }}>• {p.name}</Typography>
+                ))
+              ) : (
+                <Typography sx={{ pl: 2 }}>No projects</Typography>
+              )}
+
+              <Typography sx={{ mt: 2 }}><b>Tasks:</b></Typography>
+              {data.tasks?.length ? (
+                data.tasks.map((t: any) => (
+                  <Typography key={t.id} sx={{ pl: 2 }}>• {t.title}</Typography>
+                ))
+              ) : (
+                <Typography sx={{ pl: 2 }}>No tasks</Typography>
+              )}
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </>
@@ -262,23 +288,7 @@ export const UserEdit = () => (
     </SimpleForm>
   </Edit>
 );
-// export const UserEdit = () => (
-//   <Edit>
-//     <SimpleForm>
-//       <TextInput source="full_name" validate={[required()]} />
-//       <TextInput source="email" validate={[required(),email()]}/>
-//       <SelectInput source="role" label="Role" choices={roles} />
-//       <BooleanInput source="is_active" />
-//       <NumberInput
-//         source="telegram_id"
-//         label="Telegram ID (optional)"
-//         parse={(value) => (value === "" ? null : Number(value))}
-//         format={(value) => (value == null ? "" : value)}
-//       />
-//       <TextInput source="password" type="password" label="Password"/>
-//     </SimpleForm>
-//   </Edit>
-// );
+
 
 export const UserCreate = () => (
   <Create>

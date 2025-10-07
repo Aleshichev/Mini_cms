@@ -57,11 +57,11 @@ class UserUpdate(UserBase):
 
 class UserDetail(UserRead):
     tasks: List["TaskUserRead"] = []
-    comments: List["CommentUserRead"] = []
+    deals: List["DealRead"] = []
     projects: List["ProjectBase"] = []
 
 
-from app.schemas.comment import CommentUserRead
+from app.schemas.deal import DealRead
 from app.schemas.project import ProjectBase
 from app.schemas.task import TaskUserRead
 
