@@ -9,8 +9,10 @@ from app.crud.auth import require_role
 from app.crud.client import (
     create_client,
     delete_client_by_id,
+    get_client_by_id,
     get_client_by_email,
     get_clients,
+    update_client,
 )
 from app.schemas.client import ClientCreate, ClientRead
 from app.utils.exceptions import get_or_404
@@ -47,6 +49,26 @@ async def create_new_client(
         )
     return await create_client(session, client_in)
 
+@router.get("/{client_id}", response_model=ClientRead)
+async def read_client_by_id(
+    client_id: uuid.UUID,
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(AM)),
+):
+    client = get_or_404(await get_client_by_id(session, client_id), "Client not found")
+    return client
+
+@router.put("/{client_id}", response_model=ClientRead)
+async def update_client_by_id(
+    client_id: uuid.UUID,
+    client_in: ClientCreate,
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(AM)),
+):
+    client = get_or_404(await update_client(session, client_id, client_in), "Client not found")
+    return client
+    
+
 
 @router.delete("/{client_id}", status_code=200)
 async def delete_client(
@@ -56,3 +78,13 @@ async def delete_client(
 ):
     get_or_404(await delete_client_by_id(session, client_id), "Client not found")
     return {"message": "Client deleted"}
+
+
+# @router.get("/{client_id}/deals")
+# async def read_client_deals(client_id: str, session: AsyncSession = Depends(get_db)):
+#     deals = get_or_404(await get_client_deals_by_id(session, client_id), "Deals not found")
+#     return deals
+  
+    
+    
+    

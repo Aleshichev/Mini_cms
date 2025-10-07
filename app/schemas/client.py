@@ -1,7 +1,7 @@
 import re
 import uuid
 from datetime import datetime
-
+from typing import List
 from pydantic import BaseModel, EmailStr, field_validator
 
 
@@ -32,5 +32,7 @@ class ClientRead(ClientBase):
     id: uuid.UUID
     created_at: datetime
 
+
     class Config:
         from_attributes = True
+
