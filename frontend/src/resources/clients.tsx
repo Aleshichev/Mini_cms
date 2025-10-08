@@ -58,9 +58,9 @@ export const DealsInfoButton = () => {
   const { data, isLoading } = useGetOne("clients", { id: record.id }, { enabled: open });
   console.log("User deals data:", data?.deals);
 
-  // if (!record.deals || record.deals.length === 0) {
-  //   return null;
-  // }
+  if (!record.deals || record.deals.length === 0) {
+    return null;
+  }
 
   return (
     <>
@@ -74,9 +74,36 @@ export const DealsInfoButton = () => {
           {isLoading && <CircularProgress />}
           {data?.deals && data.deals.length > 0 ? (
             data.deals.map((deal: any) => (
-              <Typography key={deal.id} sx={{ pl: 2, mb: 1 }}>
-                • <b>{deal.title}</b> — {deal.status}
-              </Typography>
+              <div key={deal.id} style={{ marginBottom: "12px", paddingLeft: "16px" }}>
+                <Typography variant="body1">
+                  • <b>{deal.title}</b>
+                </Typography>
+                {deal.status && (
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color:
+                        deal.status === "new"
+                          ? "green"
+                          : deal.status === "in_progress"
+                          ? "orange"
+                          : deal.status === "completed"
+                          ? "gray"
+                          : "text.secondary",
+                      fontStyle: "italic",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    {deal.status === "new"
+                      ? "New Deal"
+                      : deal.status === "in_progress"
+                      ? "In Progress"
+                      : deal.status === "completed"
+                      ? "Completed"
+                      : deal.status}
+                  </Typography>
+                )}
+              </div>
             ))
           ) : (
             <Typography>No deals found</Typography>

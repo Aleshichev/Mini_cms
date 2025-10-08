@@ -1,11 +1,15 @@
+from __future__ import annotations  
 import uuid
 from datetime import datetime
 
 from pydantic import BaseModel
 
 from app.models.deal import DealStatus
-from app.schemas.client import ClientBase
 from app.schemas.user import UserBase
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.schemas.client import ClientBase
 
 
 class DealBase(BaseModel):
@@ -30,7 +34,7 @@ class DealRead(DealBase):
 
 
 class DealReadFull(DealRead):
-    client: ClientBase
+    client: "ClientBase"
     manager: UserBase
 
 

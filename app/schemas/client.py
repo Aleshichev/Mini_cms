@@ -1,10 +1,9 @@
+from __future__ import annotations   
 import re
 import uuid
 from datetime import datetime
 from typing import List
 from pydantic import BaseModel, EmailStr, field_validator
-
-
 class ClientBase(BaseModel):
     full_name: str
     phone: str | None = None
@@ -31,8 +30,11 @@ class ClientCreate(ClientBase):
 class ClientRead(ClientBase):
     id: uuid.UUID
     created_at: datetime
-
+    deals: List["DealRead"] = []
 
     class Config:
         from_attributes = True
 
+from app.schemas.deal import DealRead
+
+ClientRead.model_rebuild()

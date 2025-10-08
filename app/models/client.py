@@ -22,5 +22,5 @@ class Client(Base):
     )
 
     deals: Mapped[list["Deal"]] = relationship(
-        back_populates="client", cascade="all, delete-orphan"
+        back_populates="client", cascade="all, delete-orphan", lazy="selectin"
     )

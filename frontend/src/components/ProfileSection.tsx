@@ -37,16 +37,10 @@ export const ProfileSection = () => {
   
 
   const handleCreate = async () => {
-    console.log("➡️ handleCreate called");
     if (!identity?.id) {console.warn("❌ Нет identity.id", identity);
         return;}
     setLoading(true);
     try {
-        console.log("Creating profile with data:", {
-        user_id: identity?.id,
-        avatar_url: form.avatar_url,
-        bio: form.bio,
-        });
       await api.post("/profiles/", {
         user_id: identity.id,
         avatar_url: form.avatar_url,

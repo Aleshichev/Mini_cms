@@ -83,7 +83,7 @@ const MoreInfoButton = () => {
 
   // Выполняем запрос к API /users/:id только если диалог открыт
   const { data, isLoading } = useGetOne("users", { id: record.id }, { enabled: open });
-  {console.log("User data:", data)}
+  
   return (
     <>
       <Button size="small" onClick={handleOpen}>
