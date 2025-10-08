@@ -30,7 +30,8 @@ export const authProvider: AuthProvider = {
     if (!token) return Promise.reject();
 
     try {
-      await api.get("/auth/user/me/");
+      const { data } = await api.get("/auth/user/me/");
+      localStorage.setItem("user", JSON.stringify(data));
       return Promise.resolve();
     } catch {
       const refresh = localStorage.getItem("refresh_token");

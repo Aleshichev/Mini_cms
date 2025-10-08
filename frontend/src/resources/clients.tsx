@@ -56,8 +56,6 @@ export const DealsInfoButton = () => {
   const handleClose = () => setOpen(false);
 
   const { data, isLoading } = useGetOne("clients", { id: record.id }, { enabled: open });
-  console.log("User deals data:", data?.deals);
-
   if (!record.deals || record.deals.length === 0) {
     return null;
   }

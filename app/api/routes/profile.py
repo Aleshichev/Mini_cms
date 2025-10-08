@@ -41,7 +41,7 @@ async def get_profile_details(
         raise HTTPException(status_code=404, detail="Profile not found")
     return profile
 
-
+@router.put("/{user_id}", response_model=ProfileRead)
 @router.patch("/{user_id}", response_model=ProfileRead)
 async def update_profile_by_id(
     user_id: uuid.UUID,

@@ -45,3 +45,8 @@ class DealUpdate(BaseModel):
     client_id: uuid.UUID | None = None
     manager_id: uuid.UUID | None = None
     project_id: uuid.UUID | None = None
+
+
+from app.schemas.client import ClientBase
+
+DealReadFull.model_rebuild()
