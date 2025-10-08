@@ -18,7 +18,7 @@ from app.middleware import register_middlewares
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-media_path = Path(__file__).parent / "media"
+media_path = Path(__file__).resolve().parent.parent / "media"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -55,6 +55,5 @@ main_app.add_middleware(
 
 
 main_app.mount("/media", StaticFiles(directory=media_path), name="media")
-
 
 register_middlewares(main_app)

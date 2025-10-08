@@ -16,67 +16,91 @@ export const ProfileSection = () => {
   const { data: identity, isLoading: identityLoading } = useGetIdentity();
   const [profile, setProfile] = useState<any>(null);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ avatar_url: "", bio: "" });
+  const [form, setForm] = useState({ bio: "" });
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const BACKEND_URL = "http://localhost:8000";
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
-  // Загружаем профиль по ID пользователя
- useEffect(() => {
-  console.log("identity.id", identity?.id); // 👈
-  if (!identity?.id) return;
 
-  api
-    .get(`/profiles/${identity.id}`)
-    .then((res) => {
-      console.log("Profile loaded:", res.data); // 👈
-      setProfile(res.data);
-      setForm({
-        avatar_url: res.data.avatar_url || "",
-        bio: res.data.bio || "",
+  // Получаем профиль
+  useEffect(() => {
+    if (!identity?.id) return;
+
+    api
+      .get(`/profiles/${identity.id}`)
+      .then((res) => {
+        setProfile(res.data);
+        setForm({ bio: res.data.bio || "" });
+        setAvatarPreview(res.data.avatar_url || null);
+      })
+      .catch(() => {
+        setProfile(null);
+        setForm({ bio: "" });
+        setAvatarPreview(null);
       });
-    })
-    .catch((err) => {
-      console.warn("❌ Profile not found", err); // 👈
-      setProfile(null);
-      setForm({ avatar_url: "", bio: "" });
-    });
-}, [identity]);
+  }, [identity]);
 
-
-  // пока грузится identity — ничего не рендерим
   if (identityLoading || !identity) return null;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, bio: e.target.value }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      setSelectedFileName(file.name);
+    }
   };
 
   const handleSave = async () => {
     if (!identity?.id) return;
     setLoading(true);
+
     try {
+      let avatar_url = avatarPreview;
+
+      // если выбрано новое фото — загружаем
+      if (avatarFile) {
+        const formData = new FormData();
+        formData.append("file", avatarFile);
+
+        const res = await api.post("/upload/avatar/", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        avatar_url = res.data.avatar_url;
+      }
+
+
       if (profile) {
-        // 🔄 Профиль уже есть — обновляем
-        await api.put(`/profiles/${identity.id}`, {
-          avatar_url: form.avatar_url,
-          bio: form.bio,
+        const formData = new FormData();
+        formData.append("bio", form.bio);
+        if (avatarFile) {
+          formData.append("avatar_url", avatarFile);
+        }
+
+        await api.put(`/profiles/${identity.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
         });
         alert("Профиль обновлён");
       } else {
-        // ➕ Профиля нет — создаём
         await api.post("/profiles/", {
           user_id: identity.id,
-          avatar_url: form.avatar_url,
+          avatar_url,
           bio: form.bio,
         });
         alert("Профиль создан");
       }
 
-      // Перезагружаем профиль
+      // Перезагрузка
       const { data } = await api.get(`/profiles/${identity.id}`);
       setProfile(data);
-      setForm({
-        avatar_url: data.avatar_url || "",
-        bio: data.bio || "",
-      });
+      setForm({ bio: data.bio || "" });
+      setAvatarPreview(data.avatar_url || null);
       setOpen(false);
     } catch (e) {
       alert("Ошибка при сохранении профиля");
@@ -97,18 +121,38 @@ export const ProfileSection = () => {
       </Button>
 
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle>
-          {profile ? "Редактировать профиль" : "Создать профиль"}
-        </DialogTitle>
+        <DialogTitle>{profile ? "Редактировать профиль" : "Создать профиль"}</DialogTitle>
         <DialogContent>
-          <TextField
-            margin="dense"
-            name="avatar_url"
-            label="Avatar URL"
-            fullWidth
-            value={form.avatar_url}
-            onChange={handleChange}
-          />
+          
+          {avatarPreview && (
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+              <img
+                src={
+                  avatarPreview?.startsWith("http")
+                    ? avatarPreview
+                    : `${BACKEND_URL}${avatarPreview}`
+                }
+                alt="Avatar preview"
+                style={{
+                  width: 240,
+                  height: 240,
+                  objectFit: "cover",
+                  borderRadius: "8px",
+                }}
+              />
+            </Box>
+          )}
+
+          <Button variant="outlined" component="label">
+            {avatarFile ? "Выбрать другое фото" : "Загрузить фото"}
+            <input type="file" hidden accept="image/*" onChange={handleFileChange} />
+          </Button>
+
+          {selectedFileName && (
+            <Box sx={{ mt: 1, fontSize: 14, color: "gray" }}>
+              📁 Новое фото: <strong>{selectedFileName}</strong>
+            </Box>
+          )}
           <TextField
             margin="dense"
             name="bio"
@@ -116,7 +160,7 @@ export const ProfileSection = () => {
             multiline
             fullWidth
             value={form.bio}
-            onChange={handleChange}
+            onChange={handleBioChange}
           />
         </DialogContent>
         <DialogActions>
