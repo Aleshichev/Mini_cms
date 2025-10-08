@@ -8,3 +8,4 @@ jwt-public.pem
 .pytest_cache/
 .vscode/
 node_modules/
+media/

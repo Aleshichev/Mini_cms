@@ -40,7 +40,7 @@ async def init_db(session: AsyncSession):
 
         profile = Profile(
             user_id=user.id,
-            avatar_url="https://example/200",
+            avatar_url="media/avatars/avatar.png",
             bio=fake.text(max_nb_chars=100),
         )
         session.add(profile)

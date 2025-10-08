@@ -1,8 +1,9 @@
 import logging
 import subprocess
+from pathlib import Path
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI
 
 from app.api.roter import api_router
@@ -17,6 +18,7 @@ from app.middleware import register_middlewares
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+media_path = Path(__file__).parent / "media"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,12 +33,12 @@ async def lifespan(app: FastAPI):
 
     async with async_session() as session:
         await init_db(session)
-    await startup_with_retry(broker)   # taskiq
+    await startup_with_retry(broker)  # taskiq
     yield
     # shutdown
     logger.info("dispose engine")
     dispose()
-    await broker.shutdown()            # taskiq
+    await broker.shutdown()  # taskiq
 
 
 main_app = FastAPI(lifespan=lifespan, title=settings.PROJECT_NAME)
@@ -45,11 +47,14 @@ main_app.include_router(api_router)
 
 main_app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], 
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+main_app.mount("/media", StaticFiles(directory=media_path), name="media")
 
 
 register_middlewares(main_app)

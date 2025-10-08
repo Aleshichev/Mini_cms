@@ -5,18 +5,19 @@ from pydantic import BaseModel, field_validator
 
 
 class ProfileBase(BaseModel):
+    user_id: uuid.UUID
     avatar_url: str | None = None
     bio: str | None = None
 
-    @field_validator("avatar_url")
-    def validate_avatar_url(cls, v: str):
-        if v is not None and not v.startswith("https://"):
-            raise ValueError("The avatar url must start with https://")
-        return v
+    # @field_validator("avatar_url")
+    # def validate_avatar_url(cls, v: str):
+    #     if v is not None and not v.startswith("https://"):
+    #         raise ValueError("The avatar url must start with https://")
+    #     return v
 
 
 class ProfileCreate(ProfileBase):
-    user_id: uuid.UUID
+    pass
 
 
 class ProfileUpdate(ProfileBase):
