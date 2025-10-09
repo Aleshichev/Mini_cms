@@ -2,14 +2,26 @@ import uuid
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import selectinload
 
 from app.models.deal import Deal
+from app.models.project import Project
 from app.schemas.deal import DealCreate
 from app.utils.exceptions import handle_db_exceptions
 
 
+async def get_all_deals(session: AsyncSession) -> list[Deal]:
+    stmt = select(Deal).options(
+        selectinload(Deal.project).selectinload(Project.users),
+        selectinload(Deal.client),
+        selectinload(Deal.manager),
+    )
+    result = await session.execute(stmt)
+    return result.scalars().all()
+
+
 async def get_deal(session: AsyncSession, deal_id: uuid.UUID) -> Deal | None:
+
     stmt = select(Deal).where(Deal.id == deal_id)
     result = await session.execute(stmt)
     return result.scalars().first()
@@ -36,7 +48,11 @@ async def get_deal_full(session: AsyncSession, deal_id: uuid.UUID) -> Deal | Non
     stmt = (
         select(Deal)
         .where(Deal.id == deal_id)
-        .options(joinedload(Deal.client), joinedload(Deal.manager))
+        .options(
+            selectinload(Deal.project).selectinload(Project.users),
+            selectinload(Deal.client),
+            selectinload(Deal.manager),
+        )
     )
     result = await session.execute(stmt)
     return result.scalars().first()

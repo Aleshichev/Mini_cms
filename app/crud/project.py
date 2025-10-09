@@ -9,6 +9,10 @@ from app.models.project import Project
 from app.models.user import User
 from app.schemas.project import ProjectCreate
 
+async def get_all_projects(session: AsyncSession) -> list[Project]:
+    stmt = select(Project).options(selectinload(Project.users))
+    result = await session.execute(stmt)
+    return result.scalars().all()
 
 async def get_users_by_ids(session: AsyncSession, user_ids: list[UUID]) -> list[User]:
     users = await session.execute(select(User).where(User.id.in_(user_ids)))

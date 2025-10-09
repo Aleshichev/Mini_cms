@@ -27,16 +27,6 @@ const validatePassword = (value: string) => {
   return undefined;
 };
 
-const validatePasswordUpdate = (value: string) => {
-  if (!value || value.trim() === "") {
-    return undefined; // empty field
-  }
-  if (value.length < 6) return "Password must be at least 6 characters";
-  if (!/[0-9]/.test(value)) return "Password must contain a number";
-  if (!/[A-Z]/.test(value)) return "Password must contain an uppercase letter";
-  return undefined;
-};
-
 const MoreInfoButton = () => {
   const record = useRecordContext();
   const [open, setOpen] = useState(false);

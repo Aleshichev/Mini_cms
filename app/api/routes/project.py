@@ -8,6 +8,7 @@ from app.core.config import ALL, AM
 from app.core.database import get_db
 from app.crud.auth import require_role
 from app.crud.project import (
+    get_all_projects,
     create_project,
     delete_project,
     get_project_by_id,
@@ -18,6 +19,14 @@ from app.utils.exceptions import get_or_404
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
 
+@router.get("/", response_model=list[ProjectRead])
+async def read_projects(
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(ALL)),
+):
+
+    projects = await get_all_projects(session)
+    return projects
 
 @router.post("/", response_model=ProjectRead)
 async def create_new_project(
@@ -45,7 +54,7 @@ async def add_users_project(
     project_id: uuid.UUID,
     data: ProjectUpdate,
     session: AsyncSession = Depends(get_db),
-    user=Depends(require_role(ALL)),
+    user=Depends(require_role(AM)),
 ):
     project = await update_users_by_project(session, project_id, data)
     if not project:

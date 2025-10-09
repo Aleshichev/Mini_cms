@@ -6,12 +6,20 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import AM
 from app.core.database import get_db
 from app.crud.auth import require_role
-from app.crud.deal import create_deal, delete_deal, get_deal_full, update_deal_by_id
+from app.crud.deal import get_all_deals, create_deal, delete_deal, get_deal_full, update_deal_by_id
 from app.schemas.deal import DealCreate, DealRead, DealReadFull, DealUpdate
 from app.utils.exceptions import get_or_404
 
 router = APIRouter(prefix="/deals", tags=["Deals"])
 
+@router.get("/", response_model=list[DealReadFull])
+async def read_deals(
+    session: AsyncSession = Depends(get_db),
+    user=Depends(require_role(AM)),
+):
+
+    deals = await get_all_deals(session)
+    return deals
 
 @router.post("/", response_model=DealRead)
 async def create_new_deal(
@@ -33,7 +41,7 @@ async def get_deal_details(
         raise HTTPException(status_code=404, detail="Deal not found")
     return deal
 
-
+@router.put("/{deal_id}", response_model=DealRead)
 @router.patch("/{deal_id}", response_model=DealRead)
 async def update_deal(
     deal_id: uuid.UUID,

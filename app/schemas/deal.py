@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.schemas.client import ClientBase
+    from app.schemas.project import ProjectRead
 
 
 class DealBase(BaseModel):
@@ -36,6 +37,7 @@ class DealRead(DealBase):
 class DealReadFull(DealRead):
     client: "ClientBase"
     manager: UserBase
+    project: "ProjectRead"
 
 
 class DealUpdate(BaseModel):
@@ -48,5 +50,6 @@ class DealUpdate(BaseModel):
 
 
 from app.schemas.client import ClientBase
+from app.schemas.project import ProjectRead
 
 DealReadFull.model_rebuild()

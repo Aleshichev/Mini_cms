@@ -30,6 +30,15 @@ const dataProvider: DataProvider = {
     return { data };
   },
 
+  getMany: async (resource, params) => {
+  const { data } = await api.get(`/${resource}/`, {
+    params: {
+      filter: JSON.stringify({ id: params.ids }),
+    },
+  });
+  return { data };
+  },
+
   create: async (resource, params) => {
     const { data } = await api.post(`/${resource}/`, params.data);
     return { data };
@@ -45,7 +54,6 @@ const dataProvider: DataProvider = {
     return { data: params.previousData };
   },
 
-  // если надо — можно дописать getMany, updateMany, deleteMany
 } as DataProvider;
 
 export default dataProvider;

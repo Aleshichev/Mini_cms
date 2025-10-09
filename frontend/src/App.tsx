@@ -5,7 +5,7 @@ import { UserList, UserEdit, UserCreate } from "./resources/users";
 import { ProfileEdit, ProfileCreate } from "./resources/profiles";
 // import Users from "./resources/users";
 import { ClientList, ClientCreate, ClientEdit } from "./resources/clients";
-// import { DealList } from "./resources/deals";
+import { DealList, DealCreate, DealEdit } from "./resources/deals";
 // import { TaskList } from "./resources/tasks";
 // import { ProjectList } from "./resources/projects";
 // import { CommentList } from "./resources/comments";
@@ -22,6 +22,8 @@ function App() {
       <Resource name="users" list={UserList} edit={UserEdit} create={UserCreate} />
       <Resource name="profiles" edit={ProfileEdit} create={ProfileCreate} />
       <Resource name="clients" list={ClientList} edit={ClientEdit} create={ClientCreate} />
+      <Resource name="deals" list={DealList} create={DealCreate}  edit={DealEdit}/>
+
       {/* <Resource name="deals" list={DealList} />
       <Resource name="tasks" list={TaskList} />
       <Resource name="projects" list={ProjectList} />
