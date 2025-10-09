@@ -28,13 +28,12 @@ const statusChoices = [
 export const DealList = () => (
   <List>
     <Datagrid rowClick="edit">
-      <TextField source="id" />
       <TextField source="title" />
       <TextField source="status" />
-      <ReferenceField source="client_id" reference="clients" label="Client">
+      <ReferenceField source="client_id" reference="clients" label="Client" link={false}>
         <TextField source="full_name" />
       </ReferenceField>
-      <ReferenceField source="manager_id" reference="users" label="Manager">
+      <ReferenceField source="manager_id" reference="users" label="Manager" link={false}>
         <TextField source="email" />
       </ReferenceField>
       <ReferenceField source="project_id" reference="projects" label="Project">

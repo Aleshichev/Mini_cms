@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from app.models.project import ProjectsName
 from app.schemas.user import UserBase
+from app.schemas.task import TaskUserRead
 
 
 class ProjectBase(BaseModel):
@@ -30,3 +31,6 @@ class ProjectRead(ProjectCreate):
     id: uuid.UUID
     created_at: datetime
     users: list[UserBase] = []
+
+class ProjectFullRead(ProjectRead):
+    tasks: list[TaskUserRead] = []

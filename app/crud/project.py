@@ -10,7 +10,7 @@ from app.models.user import User
 from app.schemas.project import ProjectCreate
 
 async def get_all_projects(session: AsyncSession) -> list[Project]:
-    stmt = select(Project).options(selectinload(Project.users))
+    stmt = select(Project).options(selectinload(Project.users), selectinload(Project.tasks))
     result = await session.execute(stmt)
     return result.scalars().all()
 
@@ -44,7 +44,7 @@ async def create_project(session: AsyncSession, data: ProjectCreate) -> Project:
 async def get_project_by_id(session: AsyncSession, project_id: UUID) -> Project | None:
     stmt = (
         select(Project)
-        .options(selectinload(Project.users))
+        .options(selectinload(Project.users), selectinload(Project.tasks))
         .where(Project.id == project_id)
     )
     result = await session.execute(stmt)

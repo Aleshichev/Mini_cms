@@ -14,10 +14,16 @@ from app.crud.project import (
     get_project_by_id,
     update_users_by_project,
 )
-from app.schemas.project import ProjectCreate, ProjectRead, ProjectUpdate
+from app.schemas.project import (
+    ProjectFullRead,
+    ProjectCreate,
+    ProjectRead,
+    ProjectUpdate,
+)
 from app.utils.exceptions import get_or_404
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
+
 
 @router.get("/", response_model=list[ProjectRead])
 async def read_projects(
@@ -28,6 +34,7 @@ async def read_projects(
     projects = await get_all_projects(session)
     return projects
 
+
 @router.post("/", response_model=ProjectRead)
 async def create_new_project(
     data: ProjectCreate,
@@ -37,7 +44,7 @@ async def create_new_project(
     return await create_project(session, data)
 
 
-@router.get("/{project_id}", response_model=ProjectRead)
+@router.get("/{project_id}", response_model=ProjectFullRead)
 async def read_project(
     project_id: uuid.UUID,
     session: AsyncSession = Depends(get_db),
@@ -48,7 +55,7 @@ async def read_project(
         raise HTTPException(404, detail="Project not found")
     return project
 
-
+@router.put("/{project_id}", response_model=ProjectRead)
 @router.patch("/{project_id}", response_model=ProjectRead)
 async def add_users_project(
     project_id: uuid.UUID,

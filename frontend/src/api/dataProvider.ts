@@ -54,6 +54,27 @@ const dataProvider: DataProvider = {
     return { data: params.previousData };
   },
 
+  getManyReference: async (resource, params) => {
+  const { target, id } = params;
+
+  const { data } = await api.get(`/${resource}/`, {
+    params: {
+      filter: JSON.stringify({ [target]: id }),
+      sort: JSON.stringify(params.sort),
+      range: JSON.stringify([
+        (params.pagination.page - 1) * params.pagination.perPage,
+        params.pagination.page * params.pagination.perPage - 1,
+      ]),
+    },
+  });
+
+  return {
+    data,
+    total: data.length, // если бэк не возвращает total
+    };
+  },
+
+
 } as DataProvider;
 
 export default dataProvider;

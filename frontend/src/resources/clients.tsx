@@ -117,7 +117,6 @@ export const DealsInfoButton = () => {
 export const ClientList = () => (
   <List>
     <Datagrid rowClick="edit">
-      <TextField source="id" />
       <TextField source="full_name" />
       <EmailField source="email" />
       <TextField source="phone" />
