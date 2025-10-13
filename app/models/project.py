@@ -19,7 +19,8 @@ class Project(Base):
     __tablename__ = "projects"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    name: Mapped[ProjectsName] = mapped_column(
+    number: Mapped[int] = mapped_column(nullable=False, unique=True)
+    type: Mapped[ProjectsName] = mapped_column(
         Enum(ProjectsName), nullable=False, default=ProjectsName.web_site
     )
     description: Mapped[str | None] = mapped_column(Text)

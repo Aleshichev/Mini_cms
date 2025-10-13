@@ -1,5 +1,3 @@
-// src/admin/deals/DealResource.tsx
-
 import {
   List,
   Datagrid,
@@ -17,14 +15,12 @@ import {
   DeleteButton,
 } from "react-admin";
 
-// Статусы сделки (enum DealStatus)
 const statusChoices = [
   { id: "new", name: "New" },
   { id: "in_progress", name: "In Progress" },
   { id: "completed", name: "Completed" },
 ];
 
-// ✅ Список сделок
 export const DealList = () => (
   <List>
     <Datagrid rowClick="edit">
@@ -46,7 +42,6 @@ export const DealList = () => (
   </List>
 );
 
-// ✅ Редактирование сделки
 export const DealEdit = () => (
   <Edit>
     <SimpleForm>
@@ -63,13 +58,12 @@ export const DealEdit = () => (
       </ReferenceInput>
 
       <ReferenceInput source="project_id" reference="projects">
-        <SelectInput optionText="name" validate={[required()]} />
+        <SelectInput optionText="type" validate={[required()]} />
       </ReferenceInput>
     </SimpleForm>
   </Edit>
 );
 
-// ✅ Создание сделки
 export const DealCreate = () => (
   <Create>
     <SimpleForm>
@@ -86,7 +80,7 @@ export const DealCreate = () => (
       </ReferenceInput>
 
       <ReferenceInput source="project_id" reference="projects">
-        <SelectInput optionText="name" validate={[required()]} />
+        <SelectInput optionText="type" validate={[required()]} />
       </ReferenceInput>
     </SimpleForm>
   </Create>

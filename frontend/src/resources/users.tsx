@@ -71,7 +71,7 @@ const MoreInfoButton = () => {
               <Typography sx={{ mt: 2 }}><b>Projects:</b></Typography>
               {data.projects?.length ? (
                 data.projects.map((p: any) => (
-                  <Typography key={p.id} sx={{ pl: 2 }}>• {p.name}</Typography>
+                  <Typography key={p.id} sx={{ pl: 2 }}>• N {p.number}</Typography>
                 ))
               ) : (
                 <Typography sx={{ pl: 2 }}>No projects</Typography>

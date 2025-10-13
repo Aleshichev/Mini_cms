@@ -66,7 +66,8 @@ async def init_db(session: AsyncSession):
         users = random.sample(all_users, 2)
 
         project = Project(
-            name=project_data["name"],
+            number=project_data["number"],
+            type=project_data["type"],
             description=project_data["description"],
             users=users,
         )

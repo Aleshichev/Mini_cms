@@ -21,7 +21,8 @@ async def get_users_by_ids(session: AsyncSession, user_ids: list[UUID]) -> list[
 
 async def create_project(session: AsyncSession, data: ProjectCreate) -> Project:
     project = Project(
-        name=data.name,
+        number=data.number,
+        type=data.type,
         description=data.description,
     )
 
@@ -55,8 +56,9 @@ async def update_users_by_project(
     session: AsyncSession, project_id: UUID, data: Project
 ) -> Project | None:
     project = await get_project_by_id(session, project_id)
-    if data.name is not None:
-        project.name = data.name
+    
+    if data.type is not None:
+        project.type = data.type
     if data.description is not None:
         project.description = data.description
     if data.users is not None:

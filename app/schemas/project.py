@@ -10,7 +10,8 @@ from app.schemas.task import TaskUserRead
 
 
 class ProjectBase(BaseModel):
-    name: ProjectsName = ProjectsName.web_site
+    number: int | None = None
+    type: ProjectsName = ProjectsName.web_site
     description: str | None = None
 
     class Config:
@@ -22,7 +23,7 @@ class ProjectCreate(ProjectBase):
 
 
 class ProjectUpdate(ProjectBase):
-    name: str | None = None
+    type: str | None = None
     description: str | None = None
     users: list[uuid.UUID] | None = None
 

@@ -9,8 +9,8 @@ USERS = [
 ]
 
 PROJECTS = [
-    {"name": "web_site", "description": "Description One"},
-    {"name": "mobile_app", "description": "Description Two"},
-    {"name": "desktop_app", "description": "Description Three"},
-    {"name": "telegram_bot", "description": "Description Four"},
+    {"number": 1, "type": "web_site", "description": "Description One"},
+    {"number": 2, "type": "mobile_app", "description": "Description Two"},
+    {"number": 3, "type": "desktop_app", "description": "Description Three"},
+    {"number": 4, "type": "telegram_bot", "description": "Description Four"},
 ]

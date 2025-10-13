@@ -1,5 +1,3 @@
-// src/admin/projects/ProjectResource.tsx
-
 import {
   List,
   Datagrid,
@@ -7,7 +5,9 @@ import {
   DateField,
   Show,
   SimpleShowLayout,
-  ShowButton,
+  NumberInput,
+  ReferenceInput,
+  SelectInput,
   EditButton,
   DeleteButton,
   ArrayField,
@@ -16,13 +16,14 @@ import {
   SimpleForm,
   TextInput,
   required,
+  NumberField,
 } from "react-admin";
 
-// ✅ Список проектов
 export const ProjectList = () => (
   <List>
     <Datagrid rowClick="show">
-      <TextField source="name" />
+      <NumberField source="number" />
+      <TextField source="type" />
       <TextField source="description" />
       <EditButton />
       <DeleteButton />
@@ -32,11 +33,11 @@ export const ProjectList = () => (
 export const ProjectShow = () => (
   <Show>
     <SimpleShowLayout>
-      <TextField source="name" />
+      <TextField source="number" />
+      <TextField source="type" />
       <TextField source="description" />
       <DateField source="created_at" />
 
-      {/* 👥 Пользователи проекта */}
       <ArrayField source="users" label="Users in Project">
         <Datagrid>
           <TextField source="full_name" />
@@ -59,17 +60,18 @@ export const ProjectShow = () => (
   export const ProjectEdit = () => (
     <Edit>
       <SimpleForm>
-        <TextInput source="name" validate={[required()]} />
-        <TextInput source="description" multiline fullWidth />
+       <TextInput source="description" multiline fullWidth />
       </SimpleForm>
     </Edit>
   );
 
-  // ✅ Создание проекта
   export const ProjectCreate = () => (
     <Create>
       <SimpleForm>
-        <TextInput source="name" validate={[required()]} />
+        <NumberInput source="number" validate={[required()]} />
+        <ReferenceInput source="project_id" reference="projects">
+          <SelectInput optionText="type" validate={[required()]} />
+        </ReferenceInput> 
         <TextInput source="description" multiline fullWidth />
       </SimpleForm>
     </Create>
