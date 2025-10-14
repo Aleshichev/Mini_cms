@@ -13,7 +13,6 @@ class CommentBase(BaseModel):
 
 class CommentCreate(CommentBase):
     task_id: uuid.UUID
-    author_id: uuid.UUID | None = None  # если автор может быть анонимным
 
 
 class CommentRead(CommentBase):

@@ -7,6 +7,15 @@ import {
   useGetOne,
   useRecordContext,
   DateField,
+  Edit,
+  SimpleForm,
+  TextInput,
+  DateInput,
+  BooleanInput,
+  ReferenceInput,
+  SelectInput,
+  Create,
+  required,
 } from "react-admin";
 import { useState } from "react";
 import { Button, Dialog, DialogContent, DialogTitle, CircularProgress, Typography } from "@mui/material";
@@ -26,8 +35,6 @@ const MoreInfoButton = () => {
 
   // Запрос задачи с деталями (например: project, manager, comments)
   const { data, isLoading } = useGetOne("tasks", { id: record.id }, { enabled: open });
-  console.log("Task details:", data);
-  console.log("COMMENTS:", data.comments);
 
   return (
     <>
@@ -89,4 +96,42 @@ export const TaskList = () => (
       <DeleteButton />
     </Datagrid>
   </List>
+);
+
+// ---- Редактирование ----
+export const TaskEdit = () => (
+  <Edit>
+    <SimpleForm>
+      <TextInput source="title" validate={[required()]} fullWidth />
+      <TextInput source="description" multiline fullWidth />
+      <DateInput source="due_date" />
+      <BooleanInput source="completed" />
+      <ReferenceInput source="manager_id" reference="users" label="Manager">
+        <SelectInput optionText="full_name" />
+      </ReferenceInput>
+      <ReferenceInput source="project_id" reference="projects" label="Project">
+        <SelectInput optionText="number" />
+      </ReferenceInput>
+    </SimpleForm>
+  </Edit>
+);
+
+// ---- Создание ----
+export const TaskCreate = () => (
+  <Create>
+    <SimpleForm>
+      <TextInput source="title" validate={[required()]} fullWidth />
+      <TextInput source="description" multiline fullWidth />
+      <DateInput source="due_date" />
+      <BooleanInput source="completed" />
+
+      <ReferenceInput source="manager_id" reference="users" label="Manager">
+        <SelectInput optionText="full_name" />
+      </ReferenceInput>
+
+      <ReferenceInput source="project_id" reference="projects" label="Project">
+        <SelectInput optionText="number" />
+      </ReferenceInput>
+    </SimpleForm>
+  </Create>
 );

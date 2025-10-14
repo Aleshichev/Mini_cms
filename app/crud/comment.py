@@ -2,13 +2,21 @@ import uuid
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from app.models.user import User
 from app.models.comment import Comment
 from app.schemas.comment import CommentCreate
 
 
-async def create_comment(session: AsyncSession, comment_in: CommentCreate) -> Comment:
-    comment = Comment(**comment_in.model_dump())
+async def get_all_comments(session: AsyncSession) -> list[Comment]:
+    result = await session.execute(select(Comment))
+    return result.scalars().all()
+
+async def create_comment(session: AsyncSession, comment_in: CommentCreate, current_user: User ) -> Comment:
+    comment = Comment(
+        content=comment_in.content,
+        task_id=comment_in.task_id,
+        author_id=current_user.id,  
+    )
     session.add(comment)
     await session.commit()
     await session.refresh(comment)

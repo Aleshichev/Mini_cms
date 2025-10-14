@@ -15,9 +15,14 @@ class TaskRead(BaseModel):
     model_config = {"from_attributes": True}
 
 
-class TaskCreate(TaskRead):
+class TaskCreate(BaseModel):
+    title: str
+    description: str | None = None
+    due_date: datetime | None = None
+    completed: bool = False
     project_id: uuid.UUID
     manager_id: uuid.UUID
+
 
 
 class TaskUpdate(TaskCreate):
