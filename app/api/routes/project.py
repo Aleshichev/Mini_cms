@@ -25,7 +25,7 @@ from app.utils.exceptions import get_or_404
 router = APIRouter(prefix="/projects", tags=["Projects"])
 
 
-@router.get("/", response_model=list[ProjectRead])
+@router.get("/", response_model=list[ProjectFullRead])
 async def read_projects(
     session: AsyncSession = Depends(get_db),
     user=Depends(require_role(ALL)),

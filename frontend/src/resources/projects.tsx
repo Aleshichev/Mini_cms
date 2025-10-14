@@ -19,6 +19,15 @@ import {
   NumberField,
 } from "react-admin";
 
+const projectTypeChoices = [
+  { id: "web_site", name: "Web site" },
+  { id: "mobile_app", name: "Mobile app" },
+  { id: "desktop_app", name: "Desktop app" },
+  { id: "telegram_bot", name: "Telegram bot" },
+
+];
+
+
 export const ProjectList = () => (
   <List>
     <Datagrid rowClick="show">
@@ -48,7 +57,6 @@ export const ProjectShow = () => (
 
         <ArrayField source="tasks" label="Tasks in Project">
         <Datagrid>
-          <TextField source="id" />
           <TextField source="title" />
           <TextField source="status" />
           <DateField source="due_date" />
@@ -57,22 +65,20 @@ export const ProjectShow = () => (
     </SimpleShowLayout>
   </Show>
 );
-  export const ProjectEdit = () => (
-    <Edit>
-      <SimpleForm>
-       <TextInput source="description" multiline fullWidth />
-      </SimpleForm>
-    </Edit>
-  );
+export const ProjectEdit = () => (
+  <Edit>
+    <SimpleForm>
+      <TextInput source="description" multiline fullWidth />
+    </SimpleForm>
+  </Edit>
+);
 
-  export const ProjectCreate = () => (
-    <Create>
-      <SimpleForm>
-        <NumberInput source="number" validate={[required()]} />
-        <ReferenceInput source="project_id" reference="projects">
-          <SelectInput optionText="type" validate={[required()]} />
-        </ReferenceInput> 
-        <TextInput source="description" multiline fullWidth />
-      </SimpleForm>
-    </Create>
-  );
+export const ProjectCreate = () => (
+  <Create>
+    <SimpleForm>
+      <NumberInput source="number" validate={[required()]} />
+      <SelectInput source="type" choices={projectTypeChoices} validate={[required()]} label="Project type"/>
+      <TextInput source="description" multiline fullWidth />
+    </SimpleForm>
+  </Create>
+);

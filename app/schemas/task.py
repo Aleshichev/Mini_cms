@@ -1,27 +1,40 @@
+from __future__ import annotations   
 import uuid
 from datetime import datetime
-
+from typing import List
 from pydantic import BaseModel
 
 
-class TaskUserRead(BaseModel):
+class TaskRead(BaseModel):
+    id: uuid.UUID
     title: str
     description: str | None = None
-
-
-class TaskBase(TaskUserRead):
     due_date: datetime | None = None
-    project_id: uuid.UUID
-    manager_id: uuid.UUID
+    completed: bool
 
     model_config = {"from_attributes": True}
 
 
-class TaskCreate(TaskBase):
+class TaskCreate(TaskRead):
+    project_id: uuid.UUID
+    manager_id: uuid.UUID
+
+
+class TaskUpdate(TaskCreate):
     pass
 
 
-class TaskRead(TaskBase):
-    id: uuid.UUID
-    completed: bool
-    created_at: datetime
+class TaskDetailRead(TaskRead):
+    pass
+    # project: ProjectBase | None = None
+    comments: List[CommentBase] = []
+    manager: UserBase | None = None
+
+from app.schemas.comment import CommentBase
+from app.schemas.user import UserBase
+# from app.schemas.project import ProjectBase
+
+
+TaskDetailRead.model_rebuild()
+
+

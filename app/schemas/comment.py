@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 
 class CommentBase(BaseModel):
+    id: uuid.UUID
     content: str
 
     model_config = {"from_attributes": True}
@@ -16,12 +17,10 @@ class CommentCreate(CommentBase):
 
 
 class CommentRead(CommentBase):
-    id: uuid.UUID
     created_at: datetime
     task_id: uuid.UUID
     author_id: uuid.UUID | None
 
 
 class CommentUserRead(CommentBase):
-    id: uuid.UUID
     created_at: datetime

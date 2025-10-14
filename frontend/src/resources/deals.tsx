@@ -21,6 +21,15 @@ const statusChoices = [
   { id: "completed", name: "Completed" },
 ];
 
+const projectTypeChoices = [
+  { id: "web_site", name: "Web site" },
+  { id: "mobile_app", name: "Mobile app" },
+  { id: "desktop_app", name: "Desktop app" },
+  { id: "telegram_bot", name: "Telegram bot" },
+
+];
+
+
 export const DealList = () => (
   <List>
     <Datagrid rowClick="edit">
@@ -32,8 +41,8 @@ export const DealList = () => (
       <ReferenceField source="manager_id" reference="users" label="Manager" link={false}>
         <TextField source="email" />
       </ReferenceField>
-      <ReferenceField source="project_id" reference="projects" label="Project">
-        <TextField source="name" />
+      <ReferenceField source="project_id" reference="projects" label="Project" link={false}>
+        <TextField source="number" />
       </ReferenceField>
       <DateField source="created_at" />
       <EditButton />
@@ -57,9 +66,7 @@ export const DealEdit = () => (
         <SelectInput optionText="email" validate={[required()]} />
       </ReferenceInput>
 
-      <ReferenceInput source="project_id" reference="projects">
-        <SelectInput optionText="type" validate={[required()]} />
-      </ReferenceInput>
+      <SelectInput source="type" choices={projectTypeChoices} validate={[required()]} label="Project type"/>
     </SimpleForm>
   </Edit>
 );
@@ -78,10 +85,12 @@ export const DealCreate = () => (
       <ReferenceInput source="manager_id" reference="users">
         <SelectInput optionText="email" validate={[required()]} />
       </ReferenceInput>
-
+{/* 
       <ReferenceInput source="project_id" reference="projects">
         <SelectInput optionText="type" validate={[required()]} />
-      </ReferenceInput>
+      </ReferenceInput> */}
+      <SelectInput source="type" choices={projectTypeChoices} validate={[required()]} label="Project type"/>
+      
     </SimpleForm>
   </Create>
 );

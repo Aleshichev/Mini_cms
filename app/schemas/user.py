@@ -56,13 +56,13 @@ class UserUpdate(UserBase):
 
 
 class UserDetail(UserRead):
-    tasks: List["TaskUserRead"] = []
+    tasks: List["TaskRead"] = []
     deals: List["DealRead"] = []
     projects: List["ProjectBase"] = []
 
 
 from app.schemas.deal import DealRead
 from app.schemas.project import ProjectBase
-from app.schemas.task import TaskUserRead
+from app.schemas.task import TaskRead
 
 UserDetail.model_rebuild()

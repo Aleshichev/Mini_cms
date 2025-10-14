@@ -10,7 +10,7 @@ from app.models.user import User
 from app.schemas.project import ProjectCreate
 
 async def get_all_projects(session: AsyncSession) -> list[Project]:
-    stmt = select(Project).options(selectinload(Project.users), selectinload(Project.tasks))
+    stmt = select(Project).options(selectinload(Project.users), selectinload(Project.tasks), selectinload(Project.deals))
     result = await session.execute(stmt)
     return result.scalars().all()
 

@@ -1,17 +1,15 @@
 # app/schemas/project.py
 import uuid
 from datetime import datetime
-
 from pydantic import BaseModel
-
 from app.models.project import ProjectsName
 from app.schemas.user import UserBase
-from app.schemas.task import TaskUserRead
-
+from app.schemas.task import TaskRead
+from app.schemas.deal import DealBase
 
 class ProjectBase(BaseModel):
     number: int | None = None
-    type: ProjectsName = ProjectsName.web_site
+    type: ProjectsName | None = None
     description: str | None = None
 
     class Config:
@@ -33,5 +31,9 @@ class ProjectRead(ProjectCreate):
     created_at: datetime
     users: list[UserBase] = []
 
+
 class ProjectFullRead(ProjectRead):
-    tasks: list[TaskUserRead] = []
+    tasks: list[TaskRead] = []    
+    
+
+ProjectFullRead.model_rebuild()
