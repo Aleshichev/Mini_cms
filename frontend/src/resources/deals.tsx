@@ -85,11 +85,11 @@ export const DealCreate = () => (
       <ReferenceInput source="manager_id" reference="users">
         <SelectInput optionText="email" validate={[required()]} />
       </ReferenceInput>
-{/* 
+
       <ReferenceInput source="project_id" reference="projects">
-        <SelectInput optionText="type" validate={[required()]} />
-      </ReferenceInput> */}
-      <SelectInput source="type" choices={projectTypeChoices} validate={[required()]} label="Project type"/>
+        <SelectInput optionText="number" validate={[required()]} />
+      </ReferenceInput>
+      {/* <SelectInput source="type" choices={projectTypeChoices} validate={[required()]} label="Project type"/> */}
       
     </SimpleForm>
   </Create>

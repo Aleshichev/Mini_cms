@@ -27,6 +27,16 @@ async def get_comment(session: AsyncSession, comment_id: uuid.UUID) -> Comment |
     result = await session.execute(select(Comment).where(Comment.id == comment_id))
     return result.scalars().first()
 
+async def update_comment(session: AsyncSession, comment_id: uuid.UUID, comment_in: CommentCreate) -> Comment | None:
+    comment = await get_comment(session, comment_id)
+    if not comment:
+        return None
+    comment.content = comment_in.content
+    comment.task_id = comment_in.task_id
+    await session.commit()
+    await session.refresh(comment)
+    return comment
+
 
 async def delete_comment(session: AsyncSession, comment_id: uuid.UUID) -> None:
     comment = await get_comment(session, comment_id)

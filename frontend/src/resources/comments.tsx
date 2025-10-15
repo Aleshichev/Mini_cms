@@ -71,9 +71,9 @@ export const CommentEdit = () => (
       <ReferenceInput source="task_id" reference="tasks" label="Task">
         <SelectInput optionText="title" />
       </ReferenceInput>
-      <ReferenceInput source="author_id" reference="users" label="Author">
+      {/* <ReferenceInput source="author_id" reference="users" label="Author">
         <SelectInput optionText="full_name" />
-      </ReferenceInput>
+      </ReferenceInput> */}
       <TextInput source="content" multiline fullWidth />
     </SimpleForm>
   </Edit>
