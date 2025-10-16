@@ -24,9 +24,7 @@ const projectTypeChoices = [
   { id: "mobile_app", name: "Mobile app" },
   { id: "desktop_app", name: "Desktop app" },
   { id: "telegram_bot", name: "Telegram bot" },
-
 ];
-
 
 export const ProjectList = () => (
   <List>
@@ -54,14 +52,13 @@ export const ProjectShow = () => (
         </Datagrid>
       </ArrayField>
 
-
-        <ArrayField source="tasks" label="Tasks in Project">
+      <ArrayField source="tasks" label="Tasks in Project">
         <Datagrid>
           <TextField source="title" />
           <TextField source="status" />
           <DateField source="due_date" />
         </Datagrid>
-              </ArrayField>
+      </ArrayField>
     </SimpleShowLayout>
   </Show>
 );
@@ -77,7 +74,12 @@ export const ProjectCreate = () => (
   <Create>
     <SimpleForm>
       <NumberInput source="number" validate={[required()]} />
-      <SelectInput source="type" choices={projectTypeChoices} validate={[required()]} label="Project type"/>
+      <SelectInput
+        source="type"
+        choices={projectTypeChoices}
+        validate={[required()]}
+        label="Project type"
+      />
       <TextInput source="description" multiline fullWidth />
     </SimpleForm>
   </Create>

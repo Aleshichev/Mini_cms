@@ -23,7 +23,6 @@ export const ProfileSection = () => {
   const BACKEND_URL = "http://localhost:8000";
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
-
   // Получаем профиль
   useEffect(() => {
     if (!identity?.id) return;
@@ -75,7 +74,6 @@ export const ProfileSection = () => {
         avatar_url = res.data.avatar_url;
       }
 
-
       if (profile) {
         const formData = new FormData();
         formData.append("bio", form.bio);
@@ -111,19 +109,13 @@ export const ProfileSection = () => {
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <Button
-        variant="contained"
-        color="primary"
-        size="small"
-        onClick={() => setOpen(true)}
-      >
+      <Button variant="contained" color="primary" size="small" onClick={() => setOpen(true)}>
         My Profile
       </Button>
 
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
         <DialogTitle>{profile ? "Редактировать профиль" : "Создать профиль"}</DialogTitle>
         <DialogContent>
-          
           {avatarPreview && (
             <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
               <img

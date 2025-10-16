@@ -18,7 +18,14 @@ import {
   required,
 } from "react-admin";
 import { useState } from "react";
-import { Button, Dialog, DialogContent, DialogTitle, CircularProgress, Typography } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 
 const MoreInfoButton = () => {
   const record = useRecordContext();
@@ -33,7 +40,6 @@ const MoreInfoButton = () => {
 
   const handleClose = () => setOpen(false);
 
-  // Запрос задачи с деталями (например: project, manager, comments)
   const { data, isLoading } = useGetOne("tasks", { id: record.id }, { enabled: open });
 
   return (
@@ -60,22 +66,22 @@ const MoreInfoButton = () => {
                 <b>Completed:</b> {data.completed ? "✅ Yes" : "❌ No"}
               </Typography>
 
-
               <Typography sx={{ mt: 1 }}>
                 <b>Manager:</b> {data.manager?.full_name || "No manager"}
               </Typography>
 
-              <Typography sx={{ mt: 2 }}><b>Comments:</b></Typography>
-                    {data.comments?.length ? (
-                  data.comments.map((c: any) => (
-                    <Typography key={c.id} sx={{ pl: 2, mt: 0.5 }}>
-                      • {c.content}
-                    </Typography>
-                  ))
-                ) : (
-                  <Typography sx={{ pl: 2 }}>No comments</Typography>
-                )}
-
+              <Typography sx={{ mt: 2 }}>
+                <b>Comments:</b>
+              </Typography>
+              {data.comments?.length ? (
+                data.comments.map((c: any) => (
+                  <Typography key={c.id} sx={{ pl: 2, mt: 0.5 }}>
+                    • {c.content}
+                  </Typography>
+                ))
+              ) : (
+                <Typography sx={{ pl: 2 }}>No comments</Typography>
+              )}
             </>
           )}
         </DialogContent>
@@ -98,7 +104,6 @@ export const TaskList = () => (
   </List>
 );
 
-// ---- Редактирование ----
 export const TaskEdit = () => (
   <Edit>
     <SimpleForm>
@@ -116,7 +121,6 @@ export const TaskEdit = () => (
   </Edit>
 );
 
-// ---- Создание ----
 export const TaskCreate = () => (
   <Create>
     <SimpleForm>

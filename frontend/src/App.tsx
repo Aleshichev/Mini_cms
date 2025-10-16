@@ -16,15 +16,21 @@ function App() {
       dashboard={Dashboard}
       authProvider={authProvider}
       dataProvider={dataProvider}
-       layout={MyLayout}
+      layout={MyLayout}
     >
       <Resource name="users" list={UserList} edit={UserEdit} create={UserCreate} />
       <Resource name="profiles" edit={ProfileEdit} create={ProfileCreate} />
       <Resource name="clients" list={ClientList} edit={ClientEdit} create={ClientCreate} />
-      <Resource name="deals" list={DealList} create={DealCreate}  edit={DealEdit}/>
-      <Resource name="projects" list={ProjectList} show={ProjectShow} create={ProjectCreate}  edit={ProjectEdit}/>
+      <Resource name="deals" list={DealList} create={DealCreate} edit={DealEdit} />
+      <Resource
+        name="projects"
+        list={ProjectList}
+        show={ProjectShow}
+        create={ProjectCreate}
+        edit={ProjectEdit}
+      />
       <Resource name="tasks" list={TaskList} create={TaskCreate} edit={TaskEdit} />
-      <Resource name="comments" list={CommentList} create={CommentCreate} edit={CommentEdit }/>
+      <Resource name="comments" list={CommentList} create={CommentCreate} edit={CommentEdit} />
     </Admin>
   );
 }

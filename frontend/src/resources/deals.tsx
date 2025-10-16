@@ -26,9 +26,7 @@ const projectTypeChoices = [
   { id: "mobile_app", name: "Mobile app" },
   { id: "desktop_app", name: "Desktop app" },
   { id: "telegram_bot", name: "Telegram bot" },
-
 ];
-
 
 export const DealList = () => (
   <List>
@@ -66,7 +64,12 @@ export const DealEdit = () => (
         <SelectInput optionText="email" validate={[required()]} />
       </ReferenceInput>
 
-      <SelectInput source="type" choices={projectTypeChoices} validate={[required()]} label="Project type"/>
+      <SelectInput
+        source="type"
+        choices={projectTypeChoices}
+        validate={[required()]}
+        label="Project type"
+      />
     </SimpleForm>
   </Edit>
 );
@@ -76,7 +79,12 @@ export const DealCreate = () => (
     <SimpleForm>
       <TextInput source="title" validate={[required()]} />
       <TextInput source="description" multiline fullWidth />
-      <SelectInput source="status" choices={statusChoices} defaultValue="new" validate={[required()]} />
+      <SelectInput
+        source="status"
+        choices={statusChoices}
+        defaultValue="new"
+        validate={[required()]}
+      />
 
       <ReferenceInput source="client_id" reference="clients">
         <SelectInput optionText="full_name" validate={[required()]} />
@@ -90,7 +98,6 @@ export const DealCreate = () => (
         <SelectInput optionText="number" validate={[required()]} />
       </ReferenceInput>
       {/* <SelectInput source="type" choices={projectTypeChoices} validate={[required()]} label="Project type"/> */}
-      
     </SimpleForm>
   </Create>
 );

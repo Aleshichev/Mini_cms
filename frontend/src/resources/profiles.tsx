@@ -15,7 +15,7 @@ export const ProfileCreate = () => (
   <Create>
     <SimpleForm>
       <TextInput source="avatar_url" label="Avatar URL" />
-      <TextInput source="bio" label="Bio" multiline/>
+      <TextInput source="bio" label="Bio" multiline />
     </SimpleForm>
   </Create>
 );

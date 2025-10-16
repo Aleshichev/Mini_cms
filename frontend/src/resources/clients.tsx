@@ -84,10 +84,10 @@ export const DealsInfoButton = () => {
                         deal.status === "new"
                           ? "green"
                           : deal.status === "in_progress"
-                          ? "orange"
-                          : deal.status === "completed"
-                          ? "gray"
-                          : "text.secondary",
+                            ? "orange"
+                            : deal.status === "completed"
+                              ? "gray"
+                              : "text.secondary",
                       fontStyle: "italic",
                       marginLeft: "10px",
                     }}
@@ -95,10 +95,10 @@ export const DealsInfoButton = () => {
                     {deal.status === "new"
                       ? "New Deal"
                       : deal.status === "in_progress"
-                      ? "In Progress"
-                      : deal.status === "completed"
-                      ? "Completed"
-                      : deal.status}
+                        ? "In Progress"
+                        : deal.status === "completed"
+                          ? "Completed"
+                          : deal.status}
                   </Typography>
                 )}
               </div>
@@ -111,7 +111,6 @@ export const DealsInfoButton = () => {
     </>
   );
 };
-
 
 // --- Список клиентов
 export const ClientList = () => (
@@ -129,13 +128,12 @@ export const ClientList = () => (
   </List>
 );
 
-
 // --- Форма редактирования
 export const ClientEdit = () => (
   <Edit>
     <SimpleForm>
-      <TextInput source="full_name" validate={[required()]}/>
-      <TextInput source="email" validate={[required(), email()]}/>
+      <TextInput source="full_name" validate={[required()]} />
+      <TextInput source="email" validate={[required(), email()]} />
       <TextInput source="phone" validate={[required(), validatePhone]} />
       <NumberInput
         source="telegram_id"
@@ -145,7 +143,6 @@ export const ClientEdit = () => (
     </SimpleForm>
   </Edit>
 );
-
 
 // --- Форма создания
 export const ClientCreate = () => (

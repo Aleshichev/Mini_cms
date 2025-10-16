@@ -31,12 +31,12 @@ const dataProvider: DataProvider = {
   },
 
   getMany: async (resource, params) => {
-  const { data } = await api.get(`/${resource}/`, {
-    params: {
-      filter: JSON.stringify({ id: params.ids }),
-    },
-  });
-  return { data };
+    const { data } = await api.get(`/${resource}/`, {
+      params: {
+        filter: JSON.stringify({ id: params.ids }),
+      },
+    });
+    return { data };
   },
 
   create: async (resource, params) => {
@@ -55,26 +55,24 @@ const dataProvider: DataProvider = {
   },
 
   getManyReference: async (resource, params) => {
-  const { target, id } = params;
+    const { target, id } = params;
 
-  const { data } = await api.get(`/${resource}/`, {
-    params: {
-      filter: JSON.stringify({ [target]: id }),
-      sort: JSON.stringify(params.sort),
-      range: JSON.stringify([
-        (params.pagination.page - 1) * params.pagination.perPage,
-        params.pagination.page * params.pagination.perPage - 1,
-      ]),
-    },
-  });
+    const { data } = await api.get(`/${resource}/`, {
+      params: {
+        filter: JSON.stringify({ [target]: id }),
+        sort: JSON.stringify(params.sort),
+        range: JSON.stringify([
+          (params.pagination.page - 1) * params.pagination.perPage,
+          params.pagination.page * params.pagination.perPage - 1,
+        ]),
+      },
+    });
 
-  return {
-    data,
-    total: data.length, // если бэк не возвращает total
+    return {
+      data,
+      total: data.length, // если бэк не возвращает total
     };
   },
-
-
 } as DataProvider;
 
 export default dataProvider;

@@ -21,9 +21,7 @@ export const MyAppBar = (props: any) => {
       <TitlePortal />
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         {identity && (
-          <Typography variant="body2">
-            👤 {identity.full_name || identity.email}
-          </Typography>
+          <Typography variant="body2">👤 {identity.full_name || identity.email}</Typography>
         )}
         <ProfileSection />
       </Box>
